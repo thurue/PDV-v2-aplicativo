@@ -4,8 +4,7 @@ import { supabase } from '../../ClientSupabase'
 import { useEffect, useState } from 'react';
 import { View, StyleSheet, TextInput, Alert } from 'react-native';
 import { Heading, Image, GluestackUIProvider, Text, Box, Center, VStack, HStack, styled, set } from '@gluestack-ui/themed';
-
-// button depencencias
+import { useNavigation } from '@react-navigation/native';// button depencencias
 import {
     Button,
     ButtonText,
@@ -43,6 +42,9 @@ const formatCurrency = (value) => {
 
 
 export default function ImagePickerExample() {
+
+    const navigation = useNavigation();
+
     // form que ira para o supabase
     const [value, setValue] = useState('5.50');
     const [image, setImage] = useState(null);
@@ -62,12 +64,12 @@ export default function ImagePickerExample() {
 
 
 
-    async function addToTable(ImageUriPublic) {
+    async function addToTable(ImageUriPublic: string, NomeImagem: string) {
         try {
             const { data, error } = await supabase
                 .from('cardsInfo')
                 .insert([
-                    { tipo: TipoProd, nome: NomeProd, valor: value, imgUrl: ImageUriPublic }
+                    { tipo: TipoProd, nome: NomeProd, valor: value, imgUrl: ImageUriPublic, imgName: NomeImagem }
                 ]);
 
             if (error) {
@@ -75,6 +77,7 @@ export default function ImagePickerExample() {
             }
 
             console.log('Linha adicionada com sucesso:', data);
+            navigation.navigate('Home')
             return data;
         } catch (error) {
             console.error('Erro ao adicionar linha na tabela:', error.message);
@@ -112,7 +115,7 @@ export default function ImagePickerExample() {
                 console.log('AQUI aqui 2', data?.publicUrl);
                 if (data && data.publicUrl) {
 
-                    addToTable(data.publicUrl); // Chama addToTable apenas se data.publicUrl for válido
+                    addToTable(data.publicUrl, imgName); // Chama addToTable apenas se data.publicUrl for válido
                     clearInterval(intervalId); // Encerra o intervalo após sucesso
 
                 } else {
