@@ -14,6 +14,39 @@ import Options from '../../assets/Icones/deleteImg.png'
 
 
 export default function Home({ atualizaPagina, setatualizaPagina }) {
+
+    const [Tipo1, setTipo1] = useState('show');
+    const [Tipo2, setTipo2] = useState('show');
+    const [Tipo3, setTipo3] = useState('show');
+
+    const laranja = '#f89a56'
+    const cinza = '#b59883'
+
+
+    const [TodosColor, setTodosColor] = useState(laranja);
+    const [BebidasColor, setBebidasColor] = useState(cinza);
+    const [ComidasColor, setComidasColor] = useState(cinza);
+    const [BrinquedosColor, setBrinquedosColor] = useState(cinza);
+
+
+    const ApenasTodos = () => {
+        setTipo1('show'); setTipo2('show'); setTipo3('show');
+        setTodosColor(laranja); setBebidasColor(cinza); setComidasColor(cinza); setBrinquedosColor(cinza)
+    }
+
+    const ApenasTipo1 = () => {
+        setTipo1('show'); setTipo2('none'); setTipo3('none');
+        setTodosColor(cinza); setBebidasColor(laranja); setComidasColor(cinza); setBrinquedosColor(cinza)
+    }
+    const ApenasTipo2 = () => {
+        setTipo1('none'); setTipo2('show'); setTipo3('none');
+        setTodosColor(cinza); setBebidasColor(cinza); setComidasColor(laranja); setBrinquedosColor(cinza)
+    }
+    const ApenasTipo3 = () => {
+        setTipo1('none'); setTipo2('none'); setTipo3('show');
+        setTodosColor(cinza); setBebidasColor(cinza); setComidasColor(cinza); setBrinquedosColor(laranja)
+    }
+
     const navigation = useNavigation();
     const [ItensEscolhidos, setItensEscolhidos] = useState([]);
     const [TODOS, setTodos] = useState([
@@ -127,6 +160,8 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
         TODOS[index].quantidade--
     };
 
+
+
     function ButtonChange(event, element, index) {
         return (
             event == 0 ? (
@@ -221,23 +256,23 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
                 <HStack width="100%" w={'100%'} h={'$20'} marginTop={'0%'} marginBottom={10} reversed={false} >
 
                     <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='25%' >
-                        <Text h={20} fontWeight={900} color='#f89a56'>TODOS</Text>
-                        <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg='#f89a56'></Box>
+                        <Text onPress={() => { ApenasTodos() }} h={20} fontWeight={900} color={TodosColor}>TODOS</Text>
+                        <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg={TodosColor}></Box>
                     </VStack>
 
                     <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='25%' >
-                        <Text h={20} fontWeight={900} color='#b59883'>BEBIDAS</Text>
-                        <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg='#b59883'></Box>
+                        <Text onPress={() => { ApenasTipo1() }} h={20} fontWeight={900} color={BebidasColor}>BEBIDAS</Text>
+                        <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg={BebidasColor}></Box>
                     </VStack>
 
                     <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='25%' >
-                        <Text h={20} fontWeight={900} color='#b59883'>COMIDAS</Text>
-                        <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg='#b59883'></Box>
+                        <Text onPress={() => { ApenasTipo2() }} h={20} fontWeight={900} color={ComidasColor}>COMIDAS</Text>
+                        <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg={ComidasColor}></Box>
                     </VStack>
 
                     <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='25%' >
-                        <Text h={20} fontWeight={900} color='#b59883'>BRINQUEDOS</Text>
-                        <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg='#b59883'></Box>
+                        <Text onPress={() => { ApenasTipo3() }} h={20} fontWeight={900} color={BrinquedosColor}>BRINQUEDOS</Text>
+                        <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg={BrinquedosColor}></Box>
                     </VStack>
 
                 </HStack>
@@ -245,76 +280,217 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
 
                     <View style={styles.gridContainerr}>
 
-                        {TODOS ?
-                            TODOS.map((element, index) =>
-                            (
+                        {TODOS &&
+                            TODOS.map((element, index) => {
+                                if (element.tipo == 1) {
+                                    return (
+                                        <VStack
+                                            display={Tipo1}
+                                            key={index}
+                                            position='relative'
+                                            alignItems='center'
+                                            justifyContent='space-evenly'
+                                            w='48%'
+                                            bg='#ffffff'
+                                            borderRadius={20}
+                                            gap={10}
+                                            padding={10}
+                                            paddingVertical={15}
+                                        >
+                                            <Image
+                                                alt='imagem'
+                                                height={160}
+                                                aspectRatio={1}
+                                                borderRadius={15}
+                                                source={{
+                                                    uri: element.imgUrl
+                                                }}
+                                            />
 
-                                <VStack position='relative' key={index} style={styles.shadoww} alignItems='center' justifyContent='space-evenly' w='48%' bg='#ffffff'
-                                    borderRadius={20}
-                                    gap={10}
-                                    padding={10}
-                                    paddingVertical={15}
-                                >
-                                    <Image
-                                        alt='imagem'
-                                        height={160}
-                                        aspectRatio={1}
-                                        borderRadius={15}
-                                        source={{
-                                            uri: element.imgUrl
-                                        }}
-                                    />
+                                            <Button
+                                                flex={1}
+                                                position='absolute'
+                                                right={'12%'}
+                                                top={'1.5%'}
+                                                onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
+                                                backgroundColor='transparent'
+                                                paddingHorizontal={0}
+                                            >
+                                                <Image
+                                                    alt='imagem'
+                                                    size="2xs"
+                                                    source={Options}
+                                                />
+                                            </Button>
 
-                                    <Button
-                                        flex={1}
-                                        position='absolute'
-                                        right={'12%'}
-                                        top={'1.5%'}
-                                        onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
-                                        backgroundColor='transparent'
-                                        paddingHorizontal={0}
-                                    >
-                                        <Image
-                                            alt='imagem'
-                                            size="2xs"
-                                            source={Options}
-                                        />
-                                    </Button>
+                                            <HStack maxHeight={50} space='xl'>
 
-                                    <HStack maxHeight={40} space='xl'>
+                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
+                                                <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
 
-                                        <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
-                                        <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+                                            </HStack>
 
-                                    </HStack>
+                                            {ButtonChange(element.quantidade, element, index)}
 
-                                    {ButtonChange(element.quantidade, element, index)}
+                                            <Text
+                                                position='absolute'
+                                                left={10}
+                                                padding={5}
+                                                backgroundColor={TODOS[index].quantidade > 0 ? '#f89a56' : null}
+                                                borderRadius={100}
+                                                color='#fff'
+                                                fontWeight={900}
+                                            >
+                                                {element.quantidade > 0 ? element.quantidade : null}
+                                            </Text>
 
-                                    <Text
-                                        position='absolute'
-                                        left={10}
-                                        padding={5}
-                                        backgroundColor={TODOS[index].quantidade > 0 ? '#f89a56' : null}
-                                        borderRadius={100}
-                                        color='#fff'
-                                        fontWeight={900}
-                                    >
-                                        {element.quantidade > 0 ? element.quantidade : null}
-                                    </Text>
+                                        </VStack>
+                                    );
+                                }
+                                if (element.tipo == 2) {
+                                    return (
+                                        <VStack
+                                            display={Tipo2}
+                                            key={index}
+                                            position='relative'
+                                            alignItems='center'
+                                            justifyContent='space-evenly'
+                                            w='48%'
+                                            bg='#ffffff'
+                                            borderRadius={20}
+                                            gap={10}
+                                            padding={10}
+                                            paddingVertical={15}
+                                        >
+                                            <Image
+                                                alt='imagem'
+                                                height={160}
+                                                aspectRatio={1}
+                                                borderRadius={15}
+                                                source={{
+                                                    uri: element.imgUrl
+                                                }}
+                                            />
 
-                                </VStack>
-                            )) : null
+                                            <Button
+                                                flex={1}
+                                                position='absolute'
+                                                right={'12%'}
+                                                top={'1.5%'}
+                                                onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
+                                                backgroundColor='transparent'
+                                                paddingHorizontal={0}
+                                            >
+                                                <Image
+                                                    alt='imagem'
+                                                    size="2xs"
+                                                    source={Options}
+                                                />
+                                            </Button>
+
+                                            <HStack maxHeight={50} space='xl'>
+
+                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
+                                                <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+
+                                            </HStack>
+
+                                            {ButtonChange(element.quantidade, element, index)}
+
+                                            <Text
+                                                position='absolute'
+                                                left={10}
+                                                padding={5}
+                                                backgroundColor={TODOS[index].quantidade > 0 ? '#f89a56' : null}
+                                                borderRadius={100}
+                                                color='#fff'
+                                                fontWeight={900}
+                                            >
+                                                {element.quantidade > 0 ? element.quantidade : null}
+                                            </Text>
+
+                                        </VStack>
+                                    );
+                                }
+                                if (element.tipo == 3) {
+                                    return (
+                                        <VStack
+                                            display={Tipo3}
+                                            key={index}
+                                            position='relative'
+                                            alignItems='center'
+                                            justifyContent='space-evenly'
+                                            w='48%'
+                                            bg='#ffffff'
+                                            borderRadius={20}
+                                            gap={10}
+                                            padding={10}
+                                            paddingVertical={15}
+                                        >
+                                            <Image
+                                                alt='imagem'
+                                                height={160}
+                                                aspectRatio={1}
+                                                borderRadius={15}
+                                                source={{
+                                                    uri: element.imgUrl
+                                                }}
+                                            />
+
+                                            <Button
+                                                flex={1}
+                                                position='absolute'
+                                                right={'12%'}
+                                                top={'1.5%'}
+                                                onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
+                                                backgroundColor='transparent'
+                                                paddingHorizontal={0}
+                                            >
+                                                <Image
+                                                    alt='imagem'
+                                                    size="2xs"
+                                                    source={Options}
+                                                />
+                                            </Button>
+
+                                            <HStack maxHeight={50} space='xl'>
+
+                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
+                                                <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+
+                                            </HStack>
+
+                                            {ButtonChange(element.quantidade, element, index)}
+
+                                            <Text
+                                                position='absolute'
+                                                left={10}
+                                                padding={5}
+                                                backgroundColor={TODOS[index].quantidade > 0 ? '#f89a56' : null}
+                                                borderRadius={100}
+                                                color='#fff'
+                                                fontWeight={900}
+                                            >
+                                                {element.quantidade > 0 ? element.quantidade : null}
+                                            </Text>
+
+                                        </VStack>
+                                    );
+                                }
+
+                            })
                         }
+
 
                     </View>
 
                 </ScrollView>
             </VStack>
             <Box position='absolute' w={55} borderRadius={9000} alignItems='center' bgColor='#f89a56' left={10} bottom={30} >
-                <Text color='#f0f0f0' fontWeight={900} fontSize={50} onPress={() => navigation.navigate('Add')}>+</Text>
+                <Text color='#f0f0f0' fontWeight={900} fontSize={30} padding={10} onPress={() => navigation.navigate('Add')}>+</Text>
             </Box>
             <Box position='absolute' w={200} borderRadius={9000} alignItems='center' bgColor='#f89a56' right={10} bottom={30} >
-                <Text color='#f0f0f0' fontWeight={900} fontSize={50} onPress={() => navigation.navigate('Finalizar')}>Finalizar</Text>
+                <Text color='#f0f0f0' fontWeight={900} fontSize={30} padding={10} onPress={() => navigation.navigate('Finalizar')}>Finalizar</Text>
             </Box>
 
 
@@ -354,6 +530,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-evenly',
         // gap: 16,
+        rowGap: 5,
         width: '100%',
         height: '100%',
         paddingBottom: 200,
@@ -432,5 +609,6 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 20,
-    },
+    }
+
 });
