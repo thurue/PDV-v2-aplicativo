@@ -12,19 +12,24 @@ import { useNavigation } from '@react-navigation/native';
 // icone Options
 import Options from '../../assets/Icones/deleteImg.png'
 
+
 export default function Home() {
+    const navigation = useNavigation();
+    const [ItensEscolhidos, setItensEscolhidos] = useState([]);
     const [TODOS, setTodos] = useState([
         {
             nome: 'Brinquedo pula Pula PUla',
             valor: "4.50",
             imgUrl: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-            tipo: 1
+            tipo: 1,
+            quantidade: 0,
         },
     ]);
 
-
-
-    const navigation = useNavigation();
+    const handleInclude = (event) => {
+        console.log(event)
+        setItensEscolhidos([...ItensEscolhidos, event])
+    };
 
     async function getRowsFromTable() {
         try {
@@ -35,15 +40,20 @@ export default function Home() {
                 throw error;
             }
 
-            console.log(data[0])
             setTodos(data)
-            // console.log('Linhas recuperadas com sucesso:', data);
             return data;
         } catch (error) {
             console.error('Erro ao recuperar linhas da tabela:', error);
             return null;
         }
     }
+
+    useEffect(() => {
+        console.log(ItensEscolhidos)
+        console.log(TODOS)
+        console.log(ItensEscolhidos[0])
+        console.log(TODOS[0])
+    }, [ItensEscolhidos]);
 
     const [AttPage, setAttPage] = useState(1)
     useEffect(() => {
@@ -53,24 +63,22 @@ export default function Home() {
     useEffect(() => {
         const interval = setInterval(() => {
             setAttPage(prevAttPage => prevAttPage - 1);
-        }, 20000);
+        }, 200000);
 
         return () => {
             clearInterval(interval); // Limpa o intervalo quando o componente é desmontado
         };
-    }, []); // useEffect é chamado apenas uma vez após a montagem
+    }, []);
 
     // efeito botao pressionado
     const [isPressed, setIsPressed] = useState(false);
 
     const handlePress = () => {
         setIsPressed(true);
-        // Aqui você pode adicionar qualquer outra lógica que desejar quando o botão for pressionado
     };
 
     const handleRelease = () => {
         setIsPressed(false);
-        // Aqui você pode adicionar qualquer outra lógica que desejar quando o botão for liberado
     };
 
     // cancelar / confirmar DELETE
@@ -78,11 +86,9 @@ export default function Home() {
     const [DeleteAtual, setDeleteAtual] = useState('none')
 
     const handleShow = () => {
-        console.log('xoxota')
         setShowDelete('show');
     };
     const handleHide = () => {
-        console.log('xoxota')
         setShowDelete('none');
     };
 
@@ -120,6 +126,101 @@ export default function Home() {
     }
 
 
+
+    const handelAdd = (element, index) => {
+        TODOS[index].quantidade++
+    };
+
+
+    function handelRemove(element, index) {
+        TODOS[index].quantidade--
+    };
+
+    function ButtonChange(event, element, index) {
+        return (
+            event == 0 ? (
+                <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#fff' size="md" w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+                    <ButtonText
+                        onPress={() => {
+                            setItensEscolhidos(prevItens => {
+                                const itemIndex = prevItens.findIndex(item => item.nome === element.nome);
+                                if (itemIndex !== -1) {
+                                    // Item já existe, atualiza a quantidade
+                                    handelAdd(element, index)
+                                    prevItens[itemIndex].quantidade++;
+                                } else {
+                                    // Item não existe, adiciona ao array com quantidade inicial 1
+                                    element.quantidade = 1
+                                    prevItens.push({ ...element, quantidade: 1 });
+                                }
+                                return [...prevItens]; // Retorna uma nova cópia do array atualizado
+                            });
+                        }}
+
+                        color='#664e3c'
+                        fontSize={20}
+                        fontWeight={900}
+                    >
+                        CARRINHO
+                    </ButtonText>
+                </Button>
+
+            ) :
+                <HStack alignItems='center' justifyContent='space-around' width={'100%'}>
+                    <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#44bc85' size="md" w={'45%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+                        <ButtonText
+                            color='#fff'
+                            fontSize={30}
+                            fontWeight={900}
+                            onPress={() => {
+                                setItensEscolhidos(prevItens => {
+                                    const itemIndex = prevItens.findIndex(item => item.nome === element.nome);
+                                    if (itemIndex !== -1) {
+                                        // Item já existe, atualiza a quantidade
+                                        handelAdd(element, index)
+                                        prevItens[itemIndex].quantidade++;
+                                    } else {
+                                        // Item não existe, adiciona ao array com quantidade inicial 1
+                                        handelAdd(element, index)
+                                        prevItens.push({ ...element, quantidade: 1 });
+                                    }
+                                    return [...prevItens]; // Retorna uma nova cópia do array atualizado
+                                });
+                            }}
+
+                        >
+                            +
+                        </ButtonText>
+                    </Button>
+                    <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='red' size="md" w={'40%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+                        <ButtonText
+                            color='#fff'
+                            fontSize={30}
+                            fontWeight={900}
+                            onPress={() => {
+                                setItensEscolhidos(prevItens => {
+                                    const itemIndex = prevItens.findIndex(item => item.nome === element.nome);
+                                    if (itemIndex !== -1) {
+                                        // Item já existe, atualiza a quantidade
+                                        handelRemove(element, index)
+                                        prevItens[itemIndex].quantidade--;
+                                    } else {
+                                        // Item não existe, adiciona ao array com quantidade inicial 1
+                                        element.quantidade = 1
+                                        prevItens.push({ ...element, quantidade: 1 });
+                                    }
+                                    return [...prevItens]; // Retorna uma nova cópia do array atualizado
+                                });
+                            }}
+                        >
+                            -
+                        </ButtonText>
+                    </Button>
+                </HStack>
+
+        );
+    }
+
     return (
         <GluestackUIProvider config={config}>
 
@@ -148,7 +249,7 @@ export default function Home() {
                     </VStack>
 
                 </HStack>
-                <ScrollView>
+                <ScrollView >
 
                     <View style={styles.gridContainerr}>
 
@@ -156,14 +257,15 @@ export default function Home() {
                             TODOS.map((element, index) =>
                             (
 
-                                <VStack position='relative' key={index} style={styles.shadoww} alignItems='center' justifyContent='space-evenly' w='48%' h={260} bg='#ffffff'
+                                <VStack position='relative' key={index} style={styles.shadoww} alignItems='center' justifyContent='space-evenly' w='48%' bg='#ffffff'
                                     borderRadius={20}
                                     gap={10}
                                     padding={10}
+                                    paddingVertical={15}
                                 >
                                     <Image
                                         alt='imagem'
-                                        height={'70%'}
+                                        height={160}
                                         aspectRatio={1}
                                         borderRadius={15}
                                         source={{
@@ -174,8 +276,8 @@ export default function Home() {
                                     <Button
                                         flex={1}
                                         position='absolute'
-                                        right={'10%'}
-                                        top={'5%'}
+                                        right={'12%'}
+                                        top={'1.5%'}
                                         onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
                                         backgroundColor='transparent'
                                         paddingHorizontal={0}
@@ -187,19 +289,29 @@ export default function Home() {
                                         />
                                     </Button>
 
-                                    <HStack space='xl'>
+                                    <HStack maxHeight={40} space='xl'>
 
-                                        <Text color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
-                                        <Text color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+                                        <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
+                                        <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
 
                                     </HStack>
 
-                                    <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#fff' size="md" w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
-                                        <ButtonText color='#664e3c' fontSize={20} fontWeight={900} >CARRINHO</ButtonText>
-                                    </Button>
+                                    {ButtonChange(element.quantidade, element, index)}
+
+                                    <Text
+                                        position='absolute'
+                                        left={10}
+                                        padding={5}
+                                        backgroundColor={TODOS[index].quantidade > 0 ? '#f89a56' : null}
+                                        borderRadius={100}
+                                        color='#fff'
+                                        fontWeight={900}
+                                    >
+                                        {element.quantidade > 0 ? element.quantidade : null}
+                                    </Text>
 
                                 </VStack>
-                            )) : console.log('ainda nao gerou elementos')
+                            )) : null
                         }
 
                     </View>
@@ -210,7 +322,7 @@ export default function Home() {
                 <Text color='#f0f0f0' fontWeight={900} fontSize={50} onPress={() => navigation.navigate('Add')}>+</Text>
             </Box>
             <Box position='absolute' w={200} borderRadius={9000} alignItems='center' bgColor='#f89a56' right={10} bottom={30} >
-                <Text color='#f0f0f0' fontWeight={900} fontSize={50} onPress={() => navigation.navigate('Soon')}>Finalizar</Text>
+                <Text color='#f0f0f0' fontWeight={900} fontSize={50} onPress={() => navigation.navigate('Finalizar')}>Finalizar</Text>
             </Box>
 
 

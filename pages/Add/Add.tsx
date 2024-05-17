@@ -66,160 +66,171 @@ export default function ImagePickerExample() {
 
     async function addToTable(ImageUriPublic: string, NomeImagem: string) {
         try {
+            let ValorFinal = value.replace(',', '.')
             const { data, error } = await supabase
                 .from('cardsInfo')
                 .insert([
-                    { tipo: TipoProd, nome: NomeProd, valor: value, imgUrl: ImageUriPublic, imgName: NomeImagem }
+                    { tipo: TipoProd, nome: NomeProd, valor: ValorFinal, imgUrl: ImageUriPublic, imgName: NomeImagem, quantidade: 0 }
                 ]);
 
-            if (error) {
-                throw error;
-            }
-
-            console.log('Linha adicionada com sucesso:', data);
-            navigation.navigate('Home')
-            return data;
-        } catch (error) {
-            console.error('Erro ao adicionar linha na tabela:', error.message);
-            return null;
+        if (error) {
+            throw error;
         }
+
+        console.log('Linha adicionada com sucesso:', data);
+        navigation.navigate('Home')
+        return data;
+    } catch (error) {
+        console.error('Erro ao adicionar linha na tabela:', error.message);
+        return null;
     }
+}
 
 
 
-    const uploadImage = async () => {
-        try {
+const uploadImage = async () => {
+    try {
 
-            const imgType = image.split('.').pop();
-            const imgUrl = image;
-            const imgName = image.split('/').pop();
-            const filePath = `${imgName}`;
+        const imgType = image.split('.').pop();
+        const imgUrl = image;
+        const imgName = image.split('/').pop();
+        const filePath = `${imgName}`;
 
-            const { data, error } = await supabase.storage
-                .from('FotoProdutos') // Substitua pelo nome do seu bucket
-                .upload(filePath, {
-                    uri: imgUrl,
-                    type: `image/${imgType}`,
-                    name: imgName,
-                });
+        const { data, error } = await supabase.storage
+            .from('FotoProdutos') // Substitua pelo nome do seu bucket
+            .upload(filePath, {
+                uri: imgUrl,
+                type: `image/${imgType}`,
+                name: imgName,
+            });
 
-            if (error) {
-                throw error;
+        if (error) {
+            throw error;
+        }
+
+
+        const intervalId = setInterval(async () => {
+            const { data, errorIMG } = await supabase.storage
+                .from('FotoProdutos')
+                .getPublicUrl(imgName);
+            console.log('AQUI aqui 2', data?.publicUrl);
+            if (data && data.publicUrl) {
+
+                addToTable(data.publicUrl, imgName); // Chama addToTable apenas se data.publicUrl for válido
+                clearInterval(intervalId); // Encerra o intervalo após sucesso
+
+            } else {
+                console.error("Erro ao obter a URL pública da imagem. Tentando novamente...");
             }
+        }, 3000);
 
 
-            const intervalId = setInterval(async () => {
-                const { data, errorIMG } = await supabase.storage
-                    .from('FotoProdutos')
-                    .getPublicUrl(imgName);
-                console.log('AQUI aqui 2', data?.publicUrl);
-                if (data && data.publicUrl) {
+        Alert.alert('Foto enviada com sucesso', 'espere 5 segundos para salvar corretamente');
 
-                    addToTable(data.publicUrl, imgName); // Chama addToTable apenas se data.publicUrl for válido
-                    clearInterval(intervalId); // Encerra o intervalo após sucesso
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        Alert.alert('Upload failed', error.message);
+    }
+};
 
-                } else {
-                    console.error("Erro ao obter a URL pública da imagem. Tentando novamente...");
-                }
-            }, 3000);
-
-
-            Alert.alert('Foto enviada com sucesso', 'espere 5 segundos para salvar corretamente');
-
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            Alert.alert('Upload failed', error.message);
-        }
-    };
-
-    // gerencia qual item aparece selecionado em baixo da pagina
-    const [item1, setItem1] = useState('#f89a56');
-    const [item2, setItem2] = useState('#fff');
-    const [item3, setItem3] = useState('#fff');
+// gerencia qual item aparece selecionado em baixo da pagina
+const [item1, setItem1] = useState('#f89a56');
+const [item2, setItem2] = useState('#fff');
+const [item3, setItem3] = useState('#fff');
 
 
 
-    // faz a alteração dos valores
-    const handleChange = (text) => {
-        setValue(text);
-    };
+// faz a alteração dos valores
+const handleChange = (text) => {
+    setValue(text);
+};
 
 
 
-    // imagem
-    const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-        });
+// imagem
+const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+    });
 
-        console.log(result);
+    console.log(result);
 
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-            console.log(result.assets[0].uri)
-        }
-    };
-
-    return (
-        <View style={styles.container}>
-            <VStack width={'100%'} height={'100%'} alignItems='center' justifyContent='flex-start'>
-                <Heading style={styles.TituloAdd} marginTop={50}>Foto</Heading>
-                <View style={styles.containerPhoto}>
-                    <Button style={{ width: '100%', height: '100%' }} borderRadius={30} bgColor='#282f3d' size="md" variant="solid" action="primary" onPress={pickImage} isDisabled={false} isFocusVisible={false} >
-                        <ButtonText fontSize={40}> ADD FOTO </ButtonText>
-                    </Button>
-
-                    {image && <Image alt='imagem teste' borderRadius={10} source={{ uri: image }} style={styles.image} />}
-
-                </View>
-
-                <Heading style={styles.TituloAdd}>Nome do Produto</Heading>
-                <Input style={styles.InputStyles} variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} >
-
-                    <InputField
-                        placeholder='Nome do Produto'
-                        fontSize={20}
-                        value={NomeProd}
-                        onChangeText={setNome} // Use a função handleNomeChange para lidar com as mudanças no input
-                    />
-                </Input>
-                <Heading style={styles.TituloAdd}>valor do Produto</Heading>
-                <Input position='relative' style={styles.InputStyles} variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} >
-
-                    <Text position='absolute' fontSize={20} fontWeight={900} top={'50%'} left={30}>R$</Text>
-
-                    <InputField
-                        fontSize={20}
-                        marginLeft={20}
-                        placeholder='valor do Produto'
-                        keyboardType='numeric'
-                        type='number'
-                        onChangeText={handleChange}
-                        value={value}
-                    />
+    if (!result.canceled) {
+        setImage(result.assets[0].uri);
+        console.log(result.assets[0].uri)
+    }
+};
 
 
-                </Input>
-                <Text style={styles.formattedText}>
-                    {formatCurrency(value)}
-                </Text>
 
-                <Heading style={styles.TituloAdd}>Tipo de Produto</Heading>
-                <Box >
-                    <HStack alignItems='center' justifyContent='space-around' w={'90%'}>
-                        <Text backgroundColor={item1} onPress={() => { setTipo(1); setItem1('#f89a56'); setItem2('#fff'); setItem3('#fff') }} style={[styles.Text, styles.ShadowBorder]}>Bebida</Text>
-                        <Text backgroundColor={item2} onPress={() => { setTipo(2); setItem1('#fff'); setItem2('#f89a56'); setItem3('#fff') }} style={[styles.Text, styles.ShadowBorder]}>Comida</Text>
-                        <Text backgroundColor={item3} onPress={() => { setTipo(3); setItem1('#fff'); setItem2('#fff'); setItem3('#f89a56') }} style={[styles.Text, styles.ShadowBorder]}>Brinquedo</Text>
-                    </HStack>
-                </Box>
-                <Text onPress={uploadImage} style={styles.ShadowBorder} position='absolute' bottom={30} bgColor='#ffe6d4' color='#f89a56' fontWeight={900} fontSize={50} width={'90%'} height={60} textAlignVertical='center' textAlign='center'>Criar Produto</Text>
-            </VStack>
-        </View>
-    );
+const [FocusText, setFocusText] = useState(false);
+const [FocusValue, setFocusValue] = useState(false);
+
+
+return (
+    <View style={styles.container}>
+        <VStack width={'100%'} height={'100%'} alignItems='center' justifyContent='flex-Start'>
+            <Heading style={styles.TituloAdd} marginTop={50}>Foto</Heading>
+            <View style={styles.containerPhoto}>
+                <Button style={{ width: '100%', height: '100%' }} borderRadius={30} bgColor='#282f3d' size="md" variant="solid" action="primary" onPress={pickImage} isDisabled={false} isFocusVisible={false} >
+                    <ButtonText fontSize={40}> ADD FOTO </ButtonText>
+                </Button>
+
+                {image && <Image alt='imagem teste' borderRadius={10} source={{ uri: image }} style={styles.image} />}
+
+            </View>
+
+            <Heading style={styles.TituloAdd}>Nome do Produto</Heading>
+            <Input style={[styles.InputStyles, FocusText && styles.inputFieldFocus]} variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} >
+
+                <InputField
+                    placeholder='Nome do Produto'
+                    fontSize={20}
+                    value={NomeProd}
+                    onChangeText={setNome} // Use a função handleNomeChange para lidar com as mudanças no input
+                    onFocus={() => { setFocusText(true) }}
+                    onBlur={() => { setFocusText(false) }}
+                />
+            </Input>
+            <Heading style={styles.TituloAdd}>valor do Produto</Heading>
+            <Input position='relative' style={[styles.InputStyles, FocusValue && styles.inputFieldFocus]} variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} >
+
+                <Text position='absolute' fontSize={20} fontWeight={900} top={'50%'} left={30}>R$</Text>
+
+                <InputField
+                    fontSize={20}
+                    marginLeft={20}
+                    placeholder='valor do Produto'
+                    keyboardType='numeric'
+                    type='number'
+                    onChangeText={handleChange}
+                    value={value}
+                    onFocus={() => { setFocusValue(true) }}
+                    onBlur={() => { setFocusValue(false) }}
+                />
+
+
+            </Input>
+            <Text style={styles.formattedText}>
+                {formatCurrency(value)}
+            </Text>
+
+            <Heading style={styles.TituloAdd}>Tipo de Produto</Heading>
+            <Box >
+                <HStack alignItems='center' justifyContent='space-around' w={'90%'}>
+                    <Text backgroundColor={item1} onPress={() => { setTipo(1); setItem1('#f89a56'); setItem2('#fff'); setItem3('#fff') }} style={[styles.Text, styles.ShadowBorder]}>Bebida</Text>
+                    <Text backgroundColor={item2} onPress={() => { setTipo(2); setItem1('#fff'); setItem2('#f89a56'); setItem3('#fff') }} style={[styles.Text, styles.ShadowBorder]}>Comida</Text>
+                    <Text backgroundColor={item3} onPress={() => { setTipo(3); setItem1('#fff'); setItem2('#fff'); setItem3('#f89a56') }} style={[styles.Text, styles.ShadowBorder]}>Brinquedo</Text>
+                </HStack>
+            </Box>
+            <Text marginTop={30} onPress={uploadImage} style={styles.ShadowBorder} bgColor='#ffe6d4' color='#f89a56' fontWeight={900} fontSize={50} width={'90%'} height={60} textAlignVertical='center' textAlign='center'>Criar Produto</Text>
+        </VStack>
+    </View >
+);
 }
 
 const styles = StyleSheet.create({
@@ -271,6 +282,30 @@ const styles = StyleSheet.create({
 
         borderWidth: .5,
         borderColor: '#F89A564D'
+    },
+    inputFieldFocus: {
+        position: 'absolute',
+        bottom: 20,
+        fontSize: 60,
+        width: '90%',
+        color: '#664e3c',
+        paddingVertical: 10,
+        paddingHorizontal: 40,
+        backgroundColor: '#fff',
+        borderRadius: 20,
+
+        shadowColor: "#F89A56",
+        shadowOffset: {
+            width: 0,
+            height: 10, // Aumente o valor para uma sombra mais pronunciada
+        },
+        shadowOpacity: 0.9, // Aumente para uma sombra mais opaca
+        shadowRadius: 10, // Ajuste o raio para controlar o espalhamento
+        elevation: 20, // Aumente para sombras mais pronunciadas no Android
+
+        borderWidth: .5,
+        borderColor: '#F89A564D',
+        zIndex: 2
     },
     TituloAdd: {
         fontSize: 40,
