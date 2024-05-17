@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import Options from '../../assets/Icones/deleteImg.png'
 
 
-export default function Home() {
+export default function Home({ atualizaPagina, setatualizaPagina }) {
     const navigation = useNavigation();
     const [ItensEscolhidos, setItensEscolhidos] = useState([]);
     const [TODOS, setTodos] = useState([
@@ -25,11 +25,6 @@ export default function Home() {
             quantidade: 0,
         },
     ]);
-
-    const handleInclude = (event) => {
-        console.log(event)
-        setItensEscolhidos([...ItensEscolhidos, event])
-    };
 
     async function getRowsFromTable() {
         try {
@@ -49,26 +44,21 @@ export default function Home() {
     }
 
     useEffect(() => {
+        if (atualizaPagina == true) {
+            setTimeout(() => {
+                getRowsFromTable();
+                setatualizaPagina(false)
+
+            }, 100);
+        }
+    }, [atualizaPagina]);
+
+    useEffect(() => {
         console.log(ItensEscolhidos)
         console.log(TODOS)
         console.log(ItensEscolhidos[0])
         console.log(TODOS[0])
     }, [ItensEscolhidos]);
-
-    const [AttPage, setAttPage] = useState(1)
-    useEffect(() => {
-        getRowsFromTable();
-    }, [AttPage]);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setAttPage(prevAttPage => prevAttPage - 1);
-        }, 200000);
-
-        return () => {
-            clearInterval(interval); // Limpa o intervalo quando o componente é desmontado
-        };
-    }, []);
 
     // efeito botao pressionado
     const [isPressed, setIsPressed] = useState(false);
@@ -119,6 +109,7 @@ export default function Home() {
             }
 
             console.log('Arquivo excluído com sucesso');
+            setatualizaPagina(true)
             setShowDelete('none')
         } catch (error) {
             console.error('Erro ao excluir linha e arquivo:', error.message);
@@ -139,7 +130,7 @@ export default function Home() {
     function ButtonChange(event, element, index) {
         return (
             event == 0 ? (
-                <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#fff' size="md" w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+                <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#fff' size="md" height={50} w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
                     <ButtonText
                         onPress={() => {
                             setItensEscolhidos(prevItens => {
@@ -167,10 +158,10 @@ export default function Home() {
 
             ) :
                 <HStack alignItems='center' justifyContent='space-around' width={'100%'}>
-                    <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#44bc85' size="md" w={'45%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+                    <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#44bc85' size="md" height={50} w={'45%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
                         <ButtonText
                             color='#fff'
-                            fontSize={30}
+                            fontSize={45}
                             fontWeight={900}
                             onPress={() => {
                                 setItensEscolhidos(prevItens => {
@@ -192,10 +183,11 @@ export default function Home() {
                             +
                         </ButtonText>
                     </Button>
-                    <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='red' size="md" w={'40%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+
+                    <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='red' height={50} size="md" w={'40%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
                         <ButtonText
                             color='#fff'
-                            fontSize={30}
+                            fontSize={45}
                             fontWeight={900}
                             onPress={() => {
                                 setItensEscolhidos(prevItens => {
@@ -349,6 +341,7 @@ export default function Home() {
 
                 </VStack>
             </Center>
+
         </GluestackUIProvider >
     );
 }
@@ -427,6 +420,10 @@ const styles = StyleSheet.create({
         height: '45%',
         shadowColor: 'transparent',
         elevation: 0
+
+    },
+    buttonControlQuantidade: {
+        flex: 1
 
     },
     buttonPressed: {
