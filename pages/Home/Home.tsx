@@ -9,6 +9,7 @@ import { View, StyleSheet, ScrollView, ImageBackground, TouchableOpacity } from 
 import { useNavigation } from '@react-navigation/native';
 
 
+
 // icone Options
 import Options from '../../assets/Icones/deleteImg.png'
 
@@ -18,6 +19,10 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
     useEffect(() => {
         console.log('escolhidos aquiiii', ItensEscolhidos)
     }, [ItensEscolhidos]);
+
+    useEffect(() => {
+        setItensEscolhidos([])
+    }, []);
 
     const [Tipo1, setTipo1] = useState('show');
     const [Tipo2, setTipo2] = useState('show');

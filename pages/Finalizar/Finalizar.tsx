@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get('window');
 export default function ImagePickerExample({ ItensEscolhidos, setItensEscolhidosApp }) {
     const [ValorTotal, setValorTotal] = useState(0);
     const [ValorRecebido, setValorRecebido] = useState(0.0);
-    const [ValorTroco, setValorTroco] = useState(10);
+    const [ValorTroco, setValorTroco] = useState(0);
 
     const CalcTroco = () => {
         console.log('RECEBIDO aqiu', ValorRecebido)
@@ -38,21 +38,20 @@ export default function ImagePickerExample({ ItensEscolhidos, setItensEscolhidos
         CalcTroco();
     }, [ValorRecebido])
 
+    const CalcValorTotal = () => {
+
+        console.log('esses sao os selecionados', ItensEscolhidos);
+        if (ItensEscolhidos && ItensEscolhidos.length > 0) {
+            let total = 0;
+            ItensEscolhidos.forEach((element) => {
+                total += (element.valor * element.quantidade);
+            });
+            setValorTotal(total);
+            console.log(total);
+
+        }
+    };
     useEffect(() => {
-        const CalcValorTotal = () => {
-
-            console.log('esses sao os selecionados', ItensEscolhidos);
-            if (ItensEscolhidos && ItensEscolhidos.length > 0) {
-                let total = 0;
-                ItensEscolhidos.forEach((element) => {
-                    total += (element.valor * element.quantidade);
-                });
-                setValorTotal(total);
-                console.log(total);
-
-            }
-        };
-
         CalcValorTotal();
     }, [ItensEscolhidos]);
 
@@ -69,7 +68,21 @@ export default function ImagePickerExample({ ItensEscolhidos, setItensEscolhidos
 
         setValorRecebido(numero);
     };
+    const [_, forceUpdate] = useState(); // Criando um estado apenas para forçar a atualização
 
+    const incrementarQuantidade = (index) => {
+        ItensEscolhidos[index].quantidade++;
+        forceUpdate({}); // Forçar a atualização do componente
+        CalcValorTotal()
+    };
+
+    const decrementarQuantidade = (index) => {
+        if (ItensEscolhidos[index].quantidade > 0) {
+            ItensEscolhidos[index].quantidade--;
+            forceUpdate({}); // Forçar a atualização do componente
+            CalcValorTotal()
+        }
+    };
     return (
         <View style={styles.View}>
             <ScrollView>
@@ -84,7 +97,6 @@ export default function ImagePickerExample({ ItensEscolhidos, setItensEscolhidos
                                 <HStack marginHorizontal={'auto'} justifyContent='space-between' backgroundColor='#fff' style={styles.ShadowBorder} padding={10} width={'100%'}>
                                     <Image
                                         alt='imagem'
-                                        // size="lg"
                                         height={100}
                                         aspectRatio={1}
                                         source={element.imgUrl}
@@ -97,11 +109,11 @@ export default function ImagePickerExample({ ItensEscolhidos, setItensEscolhidos
                                         </HStack>
                                         <HStack width={'100%'} style={styles.ShadowBorder} backgroundColor='#fff' padding={15} justifyContent='space-between'>
                                             <Text
-                                                onPress={() => { handleAdd(index) }}
-                                                style={styles.textoMedio} color='#664e3c' >+</Text>
-                                            <Text style={styles.textoMedio} color='#664e3c' >{element.quantidade}</Text>
+                                                onPress={() => { incrementarQuantidade(index) }}
+                                                style={styles.textoMedio} padding={10} paddingHorizontal={30} color='#664e3c' >+</Text>
+                                            <Text style={styles.textoMedio} color='#664e3c' textAlignVertical='center' >{element.quantidade}</Text>
                                             <Text
-                                                onPress={() => { handleRemove(index) }} style={styles.textoMedio} color='#664e3c' >-</Text>
+                                                onPress={() => { decrementarQuantidade(index) }} padding={10} paddingHorizontal={30} style={styles.textoMedio} color='#664e3c' >-</Text>
                                         </HStack>
                                     </VStack>
                                 </HStack>
