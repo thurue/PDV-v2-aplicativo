@@ -13,7 +13,11 @@ import { useNavigation } from '@react-navigation/native';
 import Options from '../../assets/Icones/deleteImg.png'
 
 
-export default function Home({ atualizaPagina, setatualizaPagina }) {
+export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhidos, setItensEscolhidos }) {
+    // const [ItensEscolhidos, setItensEscolhidos] = useState(['teste']);
+    useEffect(() => {
+        console.log('escolhidos aquiiii', ItensEscolhidos)
+    }, [ItensEscolhidos]);
 
     const [Tipo1, setTipo1] = useState('show');
     const [Tipo2, setTipo2] = useState('show');
@@ -48,7 +52,7 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
     }
 
     const navigation = useNavigation();
-    const [ItensEscolhidos, setItensEscolhidos] = useState([]);
+
     const [TODOS, setTodos] = useState([
         {
             nome: 'Brinquedo pula Pula PUla',
@@ -106,6 +110,7 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
 
     // cancelar / confirmar DELETE
     const [ShowDelete, setShowDelete] = useState('none')
+
     const [DeleteAtual, setDeleteAtual] = useState('none')
 
     const handleShow = () => {
@@ -114,7 +119,6 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
     const handleHide = () => {
         setShowDelete('none');
     };
-
 
     async function DeleteImageAndLineTable(imgName) {
         try {
@@ -307,7 +311,7 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
                                                 }}
                                             />
 
-                                            <Button
+                                            {/* <Button
                                                 flex={1}
                                                 position='absolute'
                                                 right={'12%'}
@@ -321,8 +325,7 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
                                                     size="2xs"
                                                     source={Options}
                                                 />
-                                            </Button>
-
+                                            </Button> */}
                                             <HStack maxHeight={50} space='xl'>
 
                                                 <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
@@ -372,7 +375,7 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
                                                 }}
                                             />
 
-                                            <Button
+                                            {/* <Button
                                                 flex={1}
                                                 position='absolute'
                                                 right={'12%'}
@@ -386,8 +389,7 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
                                                     size="2xs"
                                                     source={Options}
                                                 />
-                                            </Button>
-
+                                            </Button> */}
                                             <HStack maxHeight={50} space='xl'>
 
                                                 <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
@@ -437,7 +439,7 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
                                                 }}
                                             />
 
-                                            <Button
+                                            {/* <Button
                                                 flex={1}
                                                 position='absolute'
                                                 right={'12%'}
@@ -451,8 +453,7 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
                                                     size="2xs"
                                                     source={Options}
                                                 />
-                                            </Button>
-
+                                            </Button> */}
                                             <HStack maxHeight={50} space='xl'>
 
                                                 <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
@@ -486,37 +487,14 @@ export default function Home({ atualizaPagina, setatualizaPagina }) {
 
                 </ScrollView>
             </VStack>
-            <Box position='absolute' w={55} borderRadius={9000} alignItems='center' bgColor='#f89a56' left={10} bottom={30} >
-                <Text color='#f0f0f0' fontWeight={900} fontSize={30} padding={10} onPress={() => navigation.navigate('Add')}>+</Text>
+            <Box position='absolute' paddingHorizontal={10} borderRadius={9000} alignItems='center' bgColor='#f89a56' left={10} bottom={30} >
+                <Text color='#f0f0f0' fontWeight={900} fontSize={30} padding={10} onPress={() => navigation.navigate('Add')}>Prod</Text>
             </Box>
-            <Box position='absolute' w={200} borderRadius={9000} alignItems='center' bgColor='#f89a56' right={10} bottom={30} >
+            <Box position='absolute' paddingHorizontal={10} borderRadius={9000} alignItems='center' bgColor='#f89a56' right={10} bottom={30} >
                 <Text color='#f0f0f0' fontWeight={900} fontSize={30} padding={10} onPress={() => navigation.navigate('Finalizar')}>Finalizar</Text>
             </Box>
 
 
-            <Center display={ShowDelete} style={styles.background} blurRadius={10} >
-                <VStack padding={10} width={"80%"} height={'40%'} backgroundColor='#fff' borderRadius={30} alignItems='center' justifyContent='space-evenly' >
-                    <TouchableOpacity
-                        onPress={handlePress}
-                        onPressOut={() => { handleRelease; handleHide() }}
-                        activeOpacity={0.5} // Define a opacidade quando o botão é pressionado
-                        style={[styles.button, isPressed && styles.buttonPressed]}
-                    >
-
-                        <Text width={'100%'} height={'100%'} color='#fff' textTransform='uppercase' fontWeight={900} fontSize={40} backgroundColor='red' textAlign='center' textAlignVertical='center' borderRadius={30} style={styles.ButtonshadowwConfirm} shadowColor='red'  >Cancelar</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        onPress={() => { handlePress; DeleteImageAndLineTable(DeleteAtual) }}
-                        onPressOut={handleRelease}
-                        activeOpacity={0.5} // Define a opacidade quando o botão é pressionado
-                        style={[styles.button, isPressed && styles.buttonPressed]}
-                    >
-                        <Text width={'100%'} height={'100%'} color='#fff' textTransform='uppercase' fontWeight={900} fontSize={40} backgroundColor='green' textAlign='center' textAlignVertical='center' borderRadius={30} style={styles.ButtonshadowwConfirm} shadowColor='green'>Confirmar</Text>
-                    </TouchableOpacity>
-
-                </VStack>
-            </Center>
 
         </GluestackUIProvider >
     );

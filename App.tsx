@@ -11,6 +11,7 @@ import Finalizar from './pages/Finalizar/Finalizar'
 
 export default function App() {
   const [atualizaPagina, setatualizaPagina] = useState(true);
+  const [ItensEscolhidos, setItensEscolhidos] = useState([]);
 
   return (
     <NavigationContainer>
@@ -18,12 +19,34 @@ export default function App() {
         initialRouteName="Home"
         screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home">
-          {props => <Home {...props} atualizaPagina={atualizaPagina} setatualizaPagina={setatualizaPagina} />}
+          {props => (
+            <Home
+              {...props}
+              ItensEscolhidos={ItensEscolhidos}
+              setItensEscolhidos={setItensEscolhidos}
+              atualizaPagina={atualizaPagina}
+              setatualizaPagina={setatualizaPagina}
+            />
+          )}
         </Stack.Screen>
         <Stack.Screen name="Add">
-          {props => <Add {...props} atualizaPagina={atualizaPagina} setatualizaPagina={setatualizaPagina} />}
+          {props => (
+            <Add
+              {...props}
+              atualizaPagina={atualizaPagina}
+              setatualizaPagina={setatualizaPagina}
+            />
+          )}
         </Stack.Screen>
-        <Stack.Screen name="Finalizar" component={Finalizar} />
+        <Stack.Screen name="Finalizar">
+          {props => (
+            <Finalizar
+              {...props}
+              ItensEscolhidos={ItensEscolhidos}
+              setItensEscolhidos={setItensEscolhidos}
+            />
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
