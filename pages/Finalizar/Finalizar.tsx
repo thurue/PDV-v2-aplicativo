@@ -33,7 +33,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
 
         const trocoCalculado = ValorRecebido - ValorTotal;
 
-        setValorTroco(trocoCalculado);
+        setValorTroco(trocoCalculado.toFixed(2).replace('.', ','));
         console.log('TROCO aqiu', ValorTroco)
 
     }
@@ -59,7 +59,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
     }, [ItensEscolhidos]);
 
     const handleChange = (numero) => {
-        let numeroFinal = 0;
+        let numeroFinal = numero;
 
         if (numero.includes(',')) {
             // Se o número contém um ponto decimal, apenas o mantenha como está
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: '#e6e6e6',
-        paddingTop: 40,
+        // paddingTop: 40,
 
     },
     container: {

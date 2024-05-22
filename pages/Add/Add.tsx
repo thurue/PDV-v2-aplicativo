@@ -274,7 +274,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
         <>
             <View style={Exibindo == 2 ? styles.FlexContainer : styles.container}>
 
-                <HStack width="100%" w={'100%'} h={'$20'} marginTop={'0%'} marginBottom={10} reversed={false} >
+                <HStack width="100%" w={'100%'} h={'$12'} marginTop={'0%'} marginBottom={10} reversed={false} >
 
                     <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='50%' >
                         <Text onPress={() => { ApenasAdicionar(); setExibindo(1) }} h={20} fontWeight={900} color={AdicionarColor}>Adicionar</Text>

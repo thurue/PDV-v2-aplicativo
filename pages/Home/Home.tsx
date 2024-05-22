@@ -233,7 +233,7 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
 
             <VStack bgColor='#f0f0f0'>
 
-                <HStack width="100%" w={'100%'} h={'$20'} marginTop={'0%'} marginBottom={10} reversed={false} >
+                <HStack width="100%" w={'100%'} h={'$12'} marginTop={'0%'} marginBottom={10} reversed={false} >
 
                     <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='25%' >
                         <Text onPress={() => { ApenasTodos() }} h={20} fontWeight={900} color={TodosColor}>TODOS</Text>
