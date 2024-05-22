@@ -11,6 +11,7 @@ import Finalizar from './pages/Finalizar/Finalizar'
 
 export default function App() {
   const [atualizaPagina, setatualizaPagina] = useState(true);
+  const [LimparSelecao, setLimparSelecao] = useState(false);
   const [ItensEscolhidos, setItensEscolhidos] = useState([]);
 
   return (
@@ -26,6 +27,8 @@ export default function App() {
               setItensEscolhidos={setItensEscolhidos}
               atualizaPagina={atualizaPagina}
               setatualizaPagina={setatualizaPagina}
+              LimparSelecao={LimparSelecao}
+              setLimparSelecao={setLimparSelecao}
             />
           )}
         </Stack.Screen>
@@ -35,6 +38,8 @@ export default function App() {
               {...props}
               atualizaPagina={atualizaPagina}
               setatualizaPagina={setatualizaPagina}
+              LimparSelecao={LimparSelecao}
+              setLimparSelecao={setLimparSelecao}
             />
           )}
         </Stack.Screen>
@@ -44,6 +49,10 @@ export default function App() {
               {...props}
               ItensEscolhidos={ItensEscolhidos}
               setItensEscolhidos={setItensEscolhidos}
+              atualizaPagina={atualizaPagina}
+              setatualizaPagina={setatualizaPagina}
+              LimparSelecao={LimparSelecao}
+              setLimparSelecao={setLimparSelecao}
             />
           )}
         </Stack.Screen>

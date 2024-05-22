@@ -19,7 +19,10 @@ const { width, height } = Dimensions.get('window');
 
 
 
-export default function ImagePickerExample({ ItensEscolhidos, setItensEscolhidosApp }) {
+export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, ItensEscolhidos, setItensEscolhidos, setLimparSelecao, LimparSelecao }) {
+    const navigation = useNavigation();
+
+
     const [ValorTotal, setValorTotal] = useState(0);
     const [ValorRecebido, setValorRecebido] = useState(0.0);
     const [ValorTroco, setValorTroco] = useState(0);
@@ -58,15 +61,13 @@ export default function ImagePickerExample({ ItensEscolhidos, setItensEscolhidos
     const handleChange = (numero) => {
         let numeroFinal = 0;
 
-        if (numero.includes('.')) {
+        if (numero.includes(',')) {
             // Se o número contém um ponto decimal, apenas o mantenha como está
-            numeroFinal = parseFloat(numero);
-        } else {
-            // Se não contém um ponto decimal, multiplique por 10
-            numeroFinal = parseFloat(numero) * 10;
+            numeroFinal = numero.replace(',', '.');
+            numeroFinal = parseFloat(numeroFinal);
         }
 
-        setValorRecebido(numero);
+        setValorRecebido(numeroFinal);
     };
     const [_, forceUpdate] = useState(); // Criando um estado apenas para forçar a atualização
 
@@ -83,6 +84,11 @@ export default function ImagePickerExample({ ItensEscolhidos, setItensEscolhidos
             CalcValorTotal()
         }
     };
+
+    function ClearSelection() {
+        setLimparSelecao(true)
+        navigation.navigate('Home')
+    }
     return (
         <View style={styles.View}>
             <ScrollView>
@@ -172,7 +178,18 @@ export default function ImagePickerExample({ ItensEscolhidos, setItensEscolhidos
                         </VStack>
                     </VStack>
 
+                    <Button style={styles.ShadowBorder} borderRadius={15} bgColor='#fff' size="md" height={60} w={'90%'} marginHorizontal={'auto'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} marginVertical={30}>
+                        <ButtonText
 
+                            color='#664e3c'
+                            fontSize={25}
+                            fontWeight={900}
+                            onPress={() => { ClearSelection() }}
+
+                        >
+                            Voltar ao inicio
+                        </ButtonText>
+                    </Button>
                 </Box>
             </ScrollView >
         </View >
@@ -203,6 +220,8 @@ const styles = StyleSheet.create({
         width: '90%',
         // height: 'auto',
         marginHorizontal: 'auto',
+        marginTop: 20,
+        marginBottom: 10,
 
     },
     textoMedio: {

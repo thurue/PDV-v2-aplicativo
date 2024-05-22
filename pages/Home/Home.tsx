@@ -9,20 +9,56 @@ import { View, StyleSheet, ScrollView, ImageBackground, TouchableOpacity } from 
 import { useNavigation } from '@react-navigation/native';
 
 
-
 // icone Options
 import Options from '../../assets/Icones/deleteImg.png'
 
 
-export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhidos, setItensEscolhidos }) {
+export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhidos, setItensEscolhidos, setLimparSelecao, LimparSelecao }) {
     // const [ItensEscolhidos, setItensEscolhidos] = useState(['teste']);
-    useEffect(() => {
-        console.log('escolhidos aquiiii', ItensEscolhidos)
-    }, [ItensEscolhidos]);
 
     useEffect(() => {
         setItensEscolhidos([])
     }, []);
+
+    useEffect(() => {
+        console.log('escolhidos aquiiii', ItensEscolhidos)
+    }, [ItensEscolhidos]);
+
+
+    useEffect(() => {
+        if (LimparSelecao == true) {
+            setItensEscolhidos([])
+
+            console.log('selecao limpada')
+            console.log(ItensEscolhidos)
+
+            setTodos(prevTodos => prevTodos.map(todo => ({
+                ...todo,
+                quantidade: 0,
+            })));
+
+        }
+        setLimparSelecao(false)
+    }, [LimparSelecao]);
+
+    useEffect(() => {
+        if (atualizaPagina == true) {
+            setTimeout(() => {
+                getRowsFromTable();
+                setatualizaPagina(false)
+
+            }, 100);
+        }
+    }, [atualizaPagina]);
+
+    useEffect(() => {
+        console.log(ItensEscolhidos)
+        console.log(TODOS)
+        console.log(ItensEscolhidos[0])
+        console.log(TODOS[0])
+    }, [ItensEscolhidos]);
+
+    // navegar pela home e os filtros
 
     const [Tipo1, setTipo1] = useState('show');
     const [Tipo2, setTipo2] = useState('show');
@@ -31,18 +67,15 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
     const laranja = '#f89a56'
     const cinza = '#b59883'
 
-
     const [TodosColor, setTodosColor] = useState(laranja);
     const [BebidasColor, setBebidasColor] = useState(cinza);
     const [ComidasColor, setComidasColor] = useState(cinza);
     const [BrinquedosColor, setBrinquedosColor] = useState(cinza);
 
-
     const ApenasTodos = () => {
         setTipo1('show'); setTipo2('show'); setTipo3('show');
         setTodosColor(laranja); setBebidasColor(cinza); setComidasColor(cinza); setBrinquedosColor(cinza)
     }
-
     const ApenasTipo1 = () => {
         setTipo1('show'); setTipo2('none'); setTipo3('none');
         setTodosColor(cinza); setBebidasColor(laranja); setComidasColor(cinza); setBrinquedosColor(cinza)
@@ -85,22 +118,6 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
         }
     }
 
-    useEffect(() => {
-        if (atualizaPagina == true) {
-            setTimeout(() => {
-                getRowsFromTable();
-                setatualizaPagina(false)
-
-            }, 100);
-        }
-    }, [atualizaPagina]);
-
-    useEffect(() => {
-        console.log(ItensEscolhidos)
-        console.log(TODOS)
-        console.log(ItensEscolhidos[0])
-        console.log(TODOS[0])
-    }, [ItensEscolhidos]);
 
     // efeito botao pressionado
     const [isPressed, setIsPressed] = useState(false);
@@ -112,52 +129,6 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
     const handleRelease = () => {
         setIsPressed(false);
     };
-
-    // cancelar / confirmar DELETE
-    const [ShowDelete, setShowDelete] = useState('none')
-
-    const [DeleteAtual, setDeleteAtual] = useState('none')
-
-    const handleShow = () => {
-        setShowDelete('show');
-    };
-    const handleHide = () => {
-        setShowDelete('none');
-    };
-
-    async function DeleteImageAndLineTable(imgName) {
-        try {
-            // Excluir a linha da tabela
-            const { data, error } = await supabase
-                .from('cardsInfo')
-                .delete()
-                .eq('imgName', imgName);
-
-            if (error) {
-                console.error('Erro ao excluir linha da tabela:', error.message);
-                return;
-            }
-
-            console.log('Linha excluída com sucesso:', data);
-
-            // Excluir o arquivo do armazenamento
-            const { error: fileError } = await supabase.storage
-                .from('FotoProdutos')
-                .remove([imgName]);
-
-            if (fileError) {
-                console.error('Erro ao excluir arquivo do armazenamento:', fileError.message);
-                return;
-            }
-
-            console.log('Arquivo excluído com sucesso');
-            setatualizaPagina(true)
-            setShowDelete('none')
-        } catch (error) {
-            console.error('Erro ao excluir linha e arquivo:', error.message);
-        }
-    }
-
 
 
     const handelAdd = (element, index) => {

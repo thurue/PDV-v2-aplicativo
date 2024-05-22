@@ -315,8 +315,8 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
                                     fontSize={20}
                                     value={NomeProd}
                                     onChangeText={setNome} // Use a função handleNomeChange para lidar com as mudanças no input
-                                    onFocus={() => { setFocusText(true) }}
-                                    onBlur={() => { setFocusText(false) }}
+                                // onFocus={() => { setFocusText(true) }}
+                                // onBlur={() => { setFocusText(false) }}
                                 />
                             </Input>
                             <Heading style={styles.TituloAdd}>valor do Produto</Heading>
@@ -332,8 +332,8 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
                                     type='number'
                                     onChangeText={handleChange}
                                     value={value}
-                                    onFocus={() => { setFocusValue(true) }}
-                                    onBlur={() => { setFocusValue(false) }}
+                                // onFocus={() => { setFocusValue(true) }}
+                                // onBlur={() => { setFocusValue(false) }}
                                 />
 
 
@@ -352,65 +352,80 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
                             </Box >
                             <Text marginTop={30} marginBottom={100} onPress={uploadImage} style={styles.ShadowBorder} bgColor='#ffe6d4' color='#f89a56' fontWeight={900} fontSize={30} width={'90%'} height={60} textAlignVertical='center' textAlign='center'>Criar Produto</Text>
                         </VStack >
-                        <Center display={ShowLoading} bgColor='#000000CC' position='absolute' height={'100%'} width={'100%'}>
+                        <Box display={ShowLoading} bgColor='#000000CC' justifyContent='center' backgroundColor='#000000CC' position='absolute' height={'100%'} width={'100%'}>
                             <Image
+                                alignSelf='center'
+
                                 size='xl'
                                 alt='loading'
                                 source={{ uri: 'https://www.camarajaciara.mt.gov.br/transparencia/images/loading.gif' }}
                             />
-                        </Center>
+                        </Box>
                     </ScrollView>
-                    : ItensTabela.map((element, index) => {
-                        console.log(element)
-                        if (Exibindo == 2) {
-                            return (
-                                <VStack
-                                    style={styles.ShadowBorder}
-                                    key={index}
-                                    position='relative'
-                                    alignItems='center'
-                                    justifyContent='space-evenly'
-                                    w='48%'
-                                    bg='#ffffff'
-                                    borderRadius={20}
-                                    gap={10}
-                                    padding={10}
-                                    paddingVertical={15}
-                                >
-                                    <Image
-                                        alt='imagem'
-                                        height={160}
-                                        aspectRatio={1}
-                                        borderRadius={15}
-                                        source={{
-                                            uri: element.imgUrl
-                                        }}
-                                    />
+                    :
+
+                    <ScrollView
+                        flex={1}
+
+                    >
+                        <View
+                            style={styles.FlexContainerDelete}>
+                            {
+                                ItensTabela.map((element, index) => {
+                                    console.log(element)
+                                    if (Exibindo == 2) {
+                                        return (
+                                            <VStack
+                                                style={styles.ShadowBorder}
+                                                key={index}
+                                                position='relative'
+                                                alignItems='center'
+                                                justifyContent='space-evenly'
+                                                w='48%'
+                                                bg='#ffffff'
+                                                borderRadius={20}
+                                                gap={10}
+                                                padding={10}
+                                                paddingVertical={15}
+                                            >
+                                                <Image
+                                                    alt='imagem'
+                                                    height={160}
+                                                    aspectRatio={1}
+                                                    borderRadius={15}
+                                                    source={{
+                                                        uri: element.imgUrl
+                                                    }}
+                                                />
 
 
-                                    <HStack maxHeight={50} space='xl'>
+                                                <HStack maxHeight={50} space='xl'>
 
-                                        <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
-                                        <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+                                                    <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
+                                                    <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
 
-                                    </HStack>
+                                                </HStack>
 
-                                    <Button style={styles.ShadowBorder} borderRadius={15} bgColor='#fff' size="md" height={50} w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
-                                        <ButtonText
-                                            onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
+                                                <Button style={styles.ShadowBorder} borderRadius={15} bgColor='#fff' size="md" height={50} w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+                                                    <ButtonText
+                                                        onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
 
-                                            color='#664e3c'
-                                            fontSize={20}
-                                            fontWeight={900}
-                                        >
-                                            DELETAR
-                                        </ButtonText>
-                                    </Button>
+                                                        color='#664e3c'
+                                                        fontSize={20}
+                                                        fontWeight={900}
+                                                    >
+                                                        DELETAR
+                                                    </ButtonText>
+                                                </Button>
 
-                                </VStack>
-                            )
-                        }
-                    })
+                                            </VStack>
+                                        )
+                                    }
+                                }
+                                )
+                            }
+                        </View>
+                    </ScrollView>
                 }
             </View >
             <Center display={ShowDelete} style={styles.background} blurRadius={10} >
@@ -443,20 +458,35 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        flex: 1,
 
     },
     FlexContainer: {
-        display: 'flex',
+        // flex: 1,
+        // flexDirection: 'row',
+        // display: 'flex',
+        // flexWrap: 'wrap',
+        // alignItems: 'center',
+        // justifyContent: 'space-evenly',
+        // gap: 16,
+        // rowGap: 5,
+        width: '100%',
+        height: '100%',
+        // backgroundColor: 'red',
+        // paddingBottom: 200,
+    },
+    FlexContainerDelete: {
+        flex: 1,
         flexDirection: 'row',
+        display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        // gap: 16,
         rowGap: 5,
         width: '100%',
         height: '100%',
-        paddingBottom: 200,
+        // backgroundColor: 'red',
+        // paddingBottom: 200,
     },
     Text: {
         textAlign: 'center',
