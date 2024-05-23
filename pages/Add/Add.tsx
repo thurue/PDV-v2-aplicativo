@@ -50,9 +50,9 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
     const [ShowLoading, setShowLoading] = useState('none');
 
     // form que ira para o supabase
-    const [value, setValue] = useState('5.50');
+    const [value, setValue] = useState('');
     const [image, setImage] = useState(null);
-    const [NomeProd, setNome] = useState(' ');
+    const [NomeProd, setNome] = useState('');
     const [TipoProd, setTipo] = useState(1);
 
 
@@ -88,49 +88,53 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
         }
     }
     const uploadImage = async () => {
-        try {
-            setShowLoading('true')
+        if (value && image && NomeProd) {
 
-            const imgType = image.split('.').pop();
-            const imgUrl = image;
-            const imgName = image.split('/').pop();
-            const filePath = `${imgName}`;
+            try {
+                setShowLoading('true')
 
-            const { data, error } = await supabase.storage
-                .from('FotoProdutos') // Substitua pelo nome do seu bucket
-                .upload(filePath, {
-                    uri: imgUrl,
-                    type: `image/${imgType}`,
-                    name: imgName,
-                });
+                const imgType = image.split('.').pop();
+                const imgUrl = image;
+                const imgName = image.split('/').pop();
+                const filePath = `${imgName}`;
 
-            if (error) {
-                throw error;
-            }
+                const { data, error } = await supabase.storage
+                    .from('FotoProdutos') // Substitua pelo nome do seu bucket
+                    .upload(filePath, {
+                        uri: imgUrl,
+                        type: `image/${imgType}`,
+                        name: imgName,
+                    });
 
-
-            const intervalId = setInterval(async () => {
-                const { data, errorIMG } = await supabase.storage
-                    .from('FotoProdutos')
-                    .getPublicUrl(imgName);
-                console.log('AQUI aqui 2', data?.publicUrl);
-                if (data && data.publicUrl) {
-
-                    addToTable(data.publicUrl, imgName); // Chama addToTable apenas se data.publicUrl for válido
-                    clearInterval(intervalId); // Encerra o intervalo após sucesso
-
-                } else {
-                    console.error("Erro ao obter a URL pública da imagem. Tentando novamente...");
+                if (error) {
+                    throw error;
                 }
-            }, 3000);
 
 
-            // Alert.alert('Foto enviada com sucesso', 'espere 5 segundos para salvar corretamente');
+                const intervalId = setInterval(async () => {
+                    const { data, errorIMG } = await supabase.storage
+                        .from('FotoProdutos')
+                        .getPublicUrl(imgName);
+                    console.log('AQUI aqui 2', data?.publicUrl);
+                    if (data && data.publicUrl) {
 
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            Alert.alert('Upload de imagem Falhou', error.message);
-        }
+                        addToTable(data.publicUrl, imgName); // Chama addToTable apenas se data.publicUrl for válido
+                        clearInterval(intervalId); // Encerra o intervalo após sucesso
+
+                    } else {
+                        console.error("Erro ao obter a URL pública da imagem. Tentando novamente...");
+                    }
+                }, 3000);
+
+
+                // Alert.alert('Foto enviada com sucesso', 'espere 5 segundos para salvar corretamente');
+
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                Alert.alert('Upload de imagem Falhou', error.message);
+            }
+        } else { alert('preencha todos os campos') }
+
     };
     // gerencia Deleta
     const [ShowDelete, setShowDelete] = useState('none')
@@ -199,7 +203,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
@@ -291,8 +295,6 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
                 {Exibindo == 1 ?
 
                     <ScrollView
-                    // style={styles.scrollView}
-                    // height={height}
                     >
 
                         <VStack flexGrow={1} width={'100%'} rowGap={20} alignItems='center' justifyContent='space-around'>
@@ -311,12 +313,9 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
 
                                 <InputField
                                     placeholder='Nome do Produto'
-                                    placeholder='valor do Produto'
                                     fontSize={20}
                                     value={NomeProd}
                                     onChangeText={setNome} // Use a função handleNomeChange para lidar com as mudanças no input
-                                // onFocus={() => { setFocusText(true) }}
-                                // onBlur={() => { setFocusText(false) }}
                                 />
                             </Input>
                             <Heading style={styles.TituloAdd}>valor do Produto</Heading>
@@ -327,13 +326,11 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
                                 <InputField
                                     fontSize={20}
                                     marginLeft={20}
-                                    placeholder='valor do Produto'
+                                    placeholder='5,50'
                                     keyboardType='numeric'
                                     type='number'
                                     onChangeText={handleChange}
                                     value={value}
-                                // onFocus={() => { setFocusValue(true) }}
-                                // onBlur={() => { setFocusValue(false) }}
                                 />
 
 
@@ -462,18 +459,8 @@ const styles = StyleSheet.create({
 
     },
     FlexContainer: {
-        // flex: 1,
-        // flexDirection: 'row',
-        // display: 'flex',
-        // flexWrap: 'wrap',
-        // alignItems: 'center',
-        // justifyContent: 'space-evenly',
-        // gap: 16,
-        // rowGap: 5,
         width: '100%',
         height: '100%',
-        // backgroundColor: 'red',
-        // paddingBottom: 200,
     },
     FlexContainerDelete: {
         flex: 1,

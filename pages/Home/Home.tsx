@@ -13,6 +13,9 @@ import { useNavigation } from '@react-navigation/native';
 import Options from '../../assets/Icones/deleteImg.png'
 
 
+import { Dimensions } from 'react-native';
+const { width, height } = Dimensions.get('window');
+
 export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhidos, setItensEscolhidos, setLimparSelecao, LimparSelecao }) {
     // const [ItensEscolhidos, setItensEscolhidos] = useState(['teste']);
 
@@ -164,7 +167,7 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                         }}
 
                         color='#664e3c'
-                        fontSize={20}
+                        style={[styles.TextoM]}
                         fontWeight={900}
                     >
                         CARRINHO
@@ -176,7 +179,7 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                     <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#44bc85' size="md" height={50} w={'45%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
                         <ButtonText
                             color='#fff'
-                            fontSize={45}
+                            style={[styles.TextoG]}
                             fontWeight={900}
                             onPress={() => {
                                 setItensEscolhidos(prevItens => {
@@ -202,7 +205,7 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                     <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='red' height={50} size="md" w={'40%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
                         <ButtonText
                             color='#fff'
-                            fontSize={45}
+                            style={[styles.TextoG]}
                             fontWeight={900}
                             onPress={() => {
                                 setItensEscolhidos(prevItens => {
@@ -287,25 +290,11 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                                                 }}
                                             />
 
-                                            {/* <Button
-                                                flex={1}
-                                                position='absolute'
-                                                right={'12%'}
-                                                top={'1.5%'}
-                                                onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
-                                                backgroundColor='transparent'
-                                                paddingHorizontal={0}
-                                            >
-                                                <Image
-                                                    alt='imagem'
-                                                    size="2xs"
-                                                    source={Options}
-                                                />
-                                            </Button> */}
+
                                             <HStack maxHeight={50} space='xl'>
 
-                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
-                                                <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
+                                                <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
 
                                             </HStack>
 
@@ -351,25 +340,11 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                                                 }}
                                             />
 
-                                            {/* <Button
-                                                flex={1}
-                                                position='absolute'
-                                                right={'12%'}
-                                                top={'1.5%'}
-                                                onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
-                                                backgroundColor='transparent'
-                                                paddingHorizontal={0}
-                                            >
-                                                <Image
-                                                    alt='imagem'
-                                                    size="2xs"
-                                                    source={Options}
-                                                />
-                                            </Button> */}
+
                                             <HStack maxHeight={50} space='xl'>
 
-                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
-                                                <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
+                                                <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
 
                                             </HStack>
 
@@ -415,25 +390,11 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                                                 }}
                                             />
 
-                                            {/* <Button
-                                                flex={1}
-                                                position='absolute'
-                                                right={'12%'}
-                                                top={'1.5%'}
-                                                onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
-                                                backgroundColor='transparent'
-                                                paddingHorizontal={0}
-                                            >
-                                                <Image
-                                                    alt='imagem'
-                                                    size="2xs"
-                                                    source={Options}
-                                                />
-                                            </Button> */}
+
                                             <HStack maxHeight={50} space='xl'>
 
-                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
-                                                <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
+                                                <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
 
                                             </HStack>
 
@@ -464,10 +425,10 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                 </ScrollView>
             </VStack>
             <Box position='absolute' paddingHorizontal={10} borderRadius={9000} alignItems='center' bgColor='#f89a56' left={10} bottom={30} >
-                <Text color='#f0f0f0' fontWeight={900} fontSize={30} padding={10} onPress={() => navigation.navigate('Add')}>Prod</Text>
+                <Text color='#f0f0f0' fontWeight={900} style={[styles.TextoM]} padding={10} onPress={() => navigation.navigate('Add')}>Prod</Text>
             </Box>
             <Box position='absolute' paddingHorizontal={10} borderRadius={9000} alignItems='center' bgColor='#f89a56' right={10} bottom={30} >
-                <Text color='#f0f0f0' fontWeight={900} fontSize={30} padding={10} onPress={() => navigation.navigate('Finalizar')}>Finalizar</Text>
+                <Text color='#f0f0f0' fontWeight={900} style={[styles.TextoM]} padding={10} onPress={() => navigation.navigate('Finalizar')}>Finalizar</Text>
             </Box>
 
 
@@ -563,6 +524,18 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 20,
-    }
+    },
+    TextoP: {
+        fontSize: ((height + width) / 2) * 0.02,
+
+    },
+    TextoM: {
+        fontSize: ((height + width) / 2) * 0.028,
+
+    },
+    TextoG: {
+        fontSize: ((height + width) / 2) * 0.04,
+
+    },
 
 });

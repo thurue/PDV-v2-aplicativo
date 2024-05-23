@@ -95,7 +95,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                 <Box style={styles.container}>
 
 
-                    <Text style={styles.Titulo}>PRODUTOS</Text>
+                    <Text style={[styles.Titulo, styles.TextoG]}>PRODUTOS</Text>
                     <Box rowGap={10} minHeight={300} marginHorizontal={'auto'} backgroundColor='#fff' style={styles.ShadowBorder} padding={20} width={'90%'} >
                         {/* card */}
                         {ItensEscolhidos.map((element, index) => (
@@ -106,6 +106,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                                         height={100}
                                         aspectRatio={1}
                                         source={element.imgUrl}
+                                        marginVertical={'auto'}
                                         borderRadius={10}
                                     />
                                     <VStack width={'70%'} justifyContent='space-around'>
@@ -128,7 +129,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                     </Box>
 
                     {/* valores */}
-                    <Text style={styles.Titulo}>VALORES</Text>
+                    <Text style={[styles.Titulo, styles.TextoG]}>VALORES</Text>
                     <VStack rowGap={10} minHeight={300} marginHorizontal={'auto'} backgroundColor='#fff' style={styles.ShadowBorder} padding={20} width={'90%'} >
                         <VStack width={'90%'} marginHorizontal={'auto'}>
 
@@ -148,22 +149,23 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                         </VStack>
                         <Box marginVertical={10} marginHorizontal={'auto'} width={'90%'} height={1} backgroundColor='black'></Box>
                         <VStack>
-                            <HStack width={'100%'} backgroundColor='#fff' padding={15} justifyContent='space-between'>
+                            <HStack width={'100%'} marginHorizontal={'auto'} padding={15} justifyContent='space-between'>
                                 <Text fontWeight={900}
-                                    fontSize={20}>TOTAL</Text>
+                                    style={styles.TextoM}>TOTAL</Text>
                                 <Text fontWeight={900}
-                                    fontSize={20}>R$ {ValorTotal}</Text>
+                                    style={styles.TextoM}>R$ {ValorTotal}</Text>
                             </HStack>
                             <HStack width={'100%'} backgroundColor='#fff' padding={15} justifyContent='space-between'>
                                 <VStack justifyContent='space-between' width={'45%'} >
-                                    <Text paddingLeft={10} fontWeight={900} fontSize={20} >RECEBIDO</Text>
+                                    <Text fontWeight={900} style={styles.TextoM} >RECEBIDO</Text>
                                     <Input variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} >
 
                                         <TextInput
                                             placeholder='valor recebido'
-                                            fontSize={20}
-                                            height={70}
-                                            style={[styles.ShadowBorder]} backgroundColor='#f89a56' padding={10} justifyContent='flex-end'
+                                            // fontSize={20}
+                                            style={styles.TextoM}
+                                            // height={70}
+                                            style={[styles.ShadowBorder]} backgroundColor='#f89a56' paddingVertical={15} paddingHorizontal={10} justifyContent='flex-end'
                                             type='number'
                                             keyboardType='numeric'
                                             onChangeText={handleChange}
@@ -171,8 +173,8 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                                     </Input>
                                 </VStack>
                                 <VStack width={'45%'} >
-                                    <Text paddingLeft={10} fontWeight={900} fontSize={20} justifyContent='flex-end'>TROCO</Text>
-                                    <Text textAlignVertical='center' height={70} style={[styles.Titulo, styles.ShadowBorder]} backgroundColor='#56f866' padding={10} justifyContent='flex-end'>R$ {ValorTroco}</Text>
+                                    <Text fontWeight={900} style={styles.TextoM} justifyContent='flex-end'>TROCO</Text>
+                                    <Text textAlignVertical='center' style={[styles.Titulo, styles.TextoM, styles.ShadowBorder]} backgroundColor='#56f866' paddingVertical={15} paddingHorizontal={10} justifyContent='flex-end'>R$ {ValorTroco}</Text>
                                 </VStack>
                             </HStack>
                         </VStack>
@@ -182,7 +184,8 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                         <ButtonText
 
                             color='#664e3c'
-                            fontSize={25}
+                            // fontSize={25}
+                            style={styles.TextoG}
                             fontWeight={900}
                             onPress={() => { ClearSelection() }}
 
@@ -214,14 +217,14 @@ const styles = StyleSheet.create({
 
     },
     Titulo: {
-        fontSize: 25,
+        // fontSize: 25,
         fontWeight: 900,
         // color: '#664e3c',
         width: '90%',
         // height: 'auto',
         marginHorizontal: 'auto',
         marginTop: 20,
-        marginBottom: 10,
+        // marginBottom: 10,
 
     },
     textoMedio: {
@@ -229,6 +232,18 @@ const styles = StyleSheet.create({
         fontWeight: 900,
         // width: '90%',
         height: 'auto',
+
+    },
+    TextoP: {
+        fontSize: ((height + width) / 2) * 0.02,
+
+    },
+    TextoM: {
+        fontSize: ((height + width) / 2) * 0.028,
+
+    },
+    TextoG: {
+        fontSize: ((height + width) / 2) * 0.04,
 
     },
     ShadowBorder: {
