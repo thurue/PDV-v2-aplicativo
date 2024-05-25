@@ -103,16 +103,15 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                                 <HStack marginHorizontal={'auto'} justifyContent='space-between' backgroundColor='#fff' style={styles.ShadowBorder} padding={10} width={'100%'}>
                                     <Image
                                         alt='imagem'
-                                        height={100}
-                                        aspectRatio={1}
+                                        height={'100%'}
                                         source={element.imgUrl}
                                         marginVertical={'auto'}
                                         borderRadius={10}
                                     />
                                     <VStack width={'70%'} justifyContent='space-around'>
-                                        <HStack paddingHorizontal={15} width={'100%'} justifyContent='space-between'>
-                                            <Text style={styles.textoMedio} color='#664e3c'>{element.nome}</Text>
-                                            <Text color='#f89a56' style={styles.textoMedio} > R$ {element.valor * element.quantidade}</Text>
+                                        <HStack padding={15} width={'100%'} justifyContent='space-between'>
+                                            <Text textAlignVertical='center' maxWidth={'50%'} style={styles.textoMedio} color='#664e3c'>{element.nome}</Text>
+                                            <Text textAlignVertical='center' color='#f89a56' style={styles.textoMedio} > R$ {(element.valor * element.quantidade).toFixed(2).replace('.', ',')}</Text>
                                         </HStack>
                                         <HStack width={'100%'} style={styles.ShadowBorder} backgroundColor='#fff' padding={15} justifyContent='space-between'>
                                             <Text
@@ -131,31 +130,31 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                     {/* valores */}
                     <Text style={[styles.Titulo, styles.TextoG]}>VALORES</Text>
                     <VStack rowGap={10} minHeight={300} marginHorizontal={'auto'} backgroundColor='#fff' style={styles.ShadowBorder} padding={20} width={'90%'} >
-                        <VStack width={'90%'} marginHorizontal={'auto'}>
+                        <VStack width={'100%'} justifyContent='space-between' marginHorizontal={'auto'}>
 
                             {ItensEscolhidos.map((element, index) => (
                                 <React.Fragment key={index}>
-                                    <HStack width={'100%'} backgroundColor='#fff' padding={15} justifyContent='space-between'>
-                                        <HStack>
+                                    <HStack width={'100%'} backgroundColor='#fff' paddingVertical={15} justifyContent='space-between'>
+                                        <HStack >
                                             <Text style={styles.textoMedio} color='#664e3c'> {element.nome}</Text>
                                             <Text style={styles.textoMedio} color='#f89a56'> X{element.quantidade}</Text>
                                         </HStack>
-                                        <Text style={styles.textoMedio} color='#664e3c'>R${element.valor * element.quantidade}</Text>
+                                        <Text style={styles.textoMedio} color='#664e3c'>R${(element.valor * element.quantidade).toFixed(2).replace('.', ',')}</Text>
                                     </HStack>
                                 </React.Fragment>
                             ))}
 
 
                         </VStack>
-                        <Box marginVertical={10} marginHorizontal={'auto'} width={'90%'} height={1} backgroundColor='black'></Box>
+                        <Box marginVertical={10} marginHorizontal={'auto'} width={'100%'} height={1} backgroundColor='black'></Box>
                         <VStack>
-                            <HStack width={'100%'} marginHorizontal={'auto'} padding={15} justifyContent='space-between'>
+                            <HStack width={'100%'} marginHorizontal={'auto'} paddingVertical={15} justifyContent='space-between'>
                                 <Text fontWeight={900}
                                     style={styles.TextoM}>TOTAL</Text>
                                 <Text fontWeight={900}
-                                    style={styles.TextoM}>R$ {ValorTotal}</Text>
+                                    style={styles.TextoM}>R$ {ValorTotal.toFixed(2).replace('.', ',')}</Text>
                             </HStack>
-                            <HStack width={'100%'} backgroundColor='#fff' padding={15} justifyContent='space-between'>
+                            <HStack width={'100%'} backgroundColor='#fff' paddingVertical={15} justifyContent='space-between'>
                                 <VStack justifyContent='space-between' width={'45%'} >
                                     <Text fontWeight={900} style={styles.TextoM} >RECEBIDO</Text>
                                     <Input variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} >

@@ -335,9 +335,9 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
 
 
                             </Input>
-                            <Text style={styles.formattedText}>
+                            {/* <Text style={styles.formattedText}>
                                 {formatCurrency(value)}
-                            </Text>
+                            </Text> */}
 
                             <Heading style={styles.TituloAdd}>Tipo de Produto</Heading>
                             <Box >
@@ -396,12 +396,9 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
                                                 />
 
 
-                                                <HStack maxHeight={50} space='xl'>
+                                                <Text textAlignVertical='center' color='#664e3c' textAlign='center' width={'90%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
+                                                <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2).replace('.', ',')}</Text>
 
-                                                    <Text textAlignVertical='center' color='#664e3c' width={'50%'} fontSize={20} fontWeight={900}>{element.nome}</Text>
-                                                    <Text textAlignVertical='center' color='#f89a56' fontSize={20} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
-
-                                                </HStack>
 
                                                 <Button style={styles.ShadowBorder} borderRadius={15} bgColor='#fff' size="md" height={50} w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
                                                     <ButtonText

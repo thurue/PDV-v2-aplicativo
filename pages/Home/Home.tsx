@@ -291,12 +291,10 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                                             />
 
 
-                                            <HStack maxHeight={50} space='xl'>
 
-                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
-                                                <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+                                            <Text textAlignVertical='center' color='#664e3c' textAlign='center' width={'90%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
+                                            <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2).replace('.', ',')}</Text>
 
-                                            </HStack>
 
                                             {ButtonChange(element.quantidade, element, index)}
 
@@ -341,12 +339,10 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                                             />
 
 
-                                            <HStack maxHeight={50} space='xl'>
 
-                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
-                                                <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
+                                            <Text textAlignVertical='center' color='#664e3c' textAlign='center' width={'90%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
+                                            <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2).replace('.', ',')}</Text>
 
-                                            </HStack>
 
                                             {ButtonChange(element.quantidade, element, index)}
 
@@ -391,12 +387,11 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
                                             />
 
 
-                                            <HStack maxHeight={50} space='xl'>
 
-                                                <Text textAlignVertical='center' color='#664e3c' width={'50%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
-                                                <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2)}</Text>
 
-                                            </HStack>
+                                            <Text textAlignVertical='center' color='#664e3c' textAlign='center' width={'90%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
+                                            <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2).replace('.', ',')}</Text>
+
 
                                             {ButtonChange(element.quantidade, element, index)}
 
