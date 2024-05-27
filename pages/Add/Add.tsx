@@ -21,24 +21,8 @@ import { Dimensions } from 'react-native';
 const { height } = Dimensions.get('window');
 
 const formatCurrency = (value) => {
-    // Remove any non-numeric characters except commas and periods
-    value = value.replace(/[^0-9,.]/g, '');
-
-    // Replace commas with periods to handle European decimal notation
     value = value.replace(',', '.');
-
-    // Convert to a float and then format
-    let number = parseFloat(value);
-    if (isNaN(number)) {
-        number = 0;
-    }
-
-    // Format the number to Brazilian currency
-    return number.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        minimumFractionDigits: 2,
-    });
+    return value
 };
 
 
@@ -136,18 +120,30 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
         } else { alert('preencha todos os campos') }
 
     };
+
     // gerencia Deleta
     const [ShowDelete, setShowDelete] = useState('none')
-
     const [DeleteAtual, setDeleteAtual] = useState('none')
 
-    const handleShow = () => {
+    const [ShowEdit, setShowEdit] = useState('none')
+    const [EditAtual, setEditAtual] = useState('none')
+
+
+    // config Delete e Editar
+    const handleShowDelete = () => {
         setShowDelete('show');
     };
-    const handleHide = () => {
+    const handleShowEdit = () => {
+        setShowEdit('show');
+    };
+
+    const handleHideRemove = () => {
         setShowDelete('none');
     };
-    // efeito botao pressionado
+    const handleHideEdit = () => {
+        setShowDelete('none');
+    };
+
     const [isPressed, setIsPressed] = useState(false);
 
     const handlePress = () => {
@@ -157,6 +153,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
     const handleRelease = () => {
         setIsPressed(false);
     };
+
 
 
     async function DeleteImageAndLineTable(imgName) {
@@ -190,6 +187,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
             console.error('Erro ao excluir linha e arquivo:', error.message);
         }
     }
+
     // gerencia qual item aparece selecionado em baixo da pagina
     const [item1, setItem1] = useState('#f89a56');
     const [item2, setItem2] = useState('#fff');
@@ -199,6 +197,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
     const handleChange = (text) => {
         setValue(text);
     };
+
     // imagem
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -266,13 +265,54 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
 
     const [AdicionarColor, setAdicionarColor] = useState(laranja);
     const [RemoverColor, setRemoverColor] = useState(cinza);
+    const [EditarColor, setEditarColor] = useState(cinza);
 
     const ApenasAdicionar = () => {
-        setAdicionarColor(laranja); setRemoverColor(cinza)
+        setAdicionarColor(laranja); setRemoverColor(cinza); setEditarColor(cinza)
     }
     const ApenasRemover = () => {
-        setAdicionarColor(cinza); setRemoverColor(laranja)
+        setAdicionarColor(cinza); setRemoverColor(laranja); setEditarColor(cinza)
     }
+    const ApenasEditar = () => {
+        setAdicionarColor(cinza); setRemoverColor(cinza); setEditarColor(laranja)
+    }
+
+
+    const EditarInputNome = (event) => {
+        const editInput = EditAtual;
+        editInput.nome = event
+        setEditAtual(editInput)
+        console.log(editInput)
+        console.log(EditAtual)
+        console.log(event)
+    }
+    const EditarInputValor = (event) => {
+        const editInput = EditAtual;
+        const eventFormatado = formatCurrency(event)
+        // const eventFormatado = event
+        editInput.valor = eventFormatado
+        setEditAtual(editInput)
+        console.log(editInput)
+        console.log(EditAtual)
+        console.log(event)
+    }
+
+    const updateLinha = async (TabelName, UpdateLinha, id) => {
+        const { data, error } = await supabase
+            .from(TabelName)
+            .update(UpdateLinha)
+            .eq('id', id);
+
+        setShowEdit('none')
+        setatualizaPagina(true)
+        if (error) {
+            console.error('Erro ao atualizar a linha:', error);
+            return null;
+        }
+        console.log('Linha atualizada com sucesso:', data);
+        return data;
+    };
+
 
     return (
         <>
@@ -280,16 +320,20 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
 
                 <HStack width="100%" w={'100%'} h={'$12'} marginTop={'0%'} marginBottom={10} reversed={false} >
 
-                    <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='50%' >
+                    <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='33.3%' >
                         <Text onPress={() => { ApenasAdicionar(); setExibindo(1) }} h={20} fontWeight={900} color={AdicionarColor}>Adicionar</Text>
                         <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg={AdicionarColor}></Box>
                     </VStack>
 
-                    <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='50%' >
+                    <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='33.3%' >
                         <Text onPress={() => { ApenasRemover(); setExibindo(2); setatualizaPagina(true) }} h={20} fontWeight={900} color={RemoverColor}>Remover</Text>
                         <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg={RemoverColor}></Box>
                     </VStack>
 
+                    <VStack flexDirection='column' justifyContent='flex-end' alignItems='center' w='33.3%' >
+                        <Text onPress={() => { ApenasEditar(); setExibindo(3); setatualizaPagina(true) }} h={20} fontWeight={900} color={EditarColor}>Editar</Text>
+                        <Box marginVertical={0} w='95%' margin={'auto'} borderRadius={100} h={5} bg={EditarColor}></Box>
+                    </VStack>
 
                 </HStack>
                 {Exibindo == 1 ?
@@ -335,9 +379,7 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
 
 
                             </Input>
-                            {/* <Text style={styles.formattedText}>
-                                {formatCurrency(value)}
-                            </Text> */}
+
 
                             <Heading style={styles.TituloAdd}>Tipo de Produto</Heading>
                             <Box >
@@ -360,72 +402,138 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
                         </Box>
                     </ScrollView>
                     :
+                    (Exibindo == 2 ?
+                        <ScrollView
+                            flex={1}
 
-                    <ScrollView
-                        flex={1}
-
-                    >
-                        <View
-                            style={styles.FlexContainerDelete}>
-                            {
-                                ItensTabela.map((element, index) => {
-                                    console.log(element)
-                                    if (Exibindo == 2) {
-                                        return (
-                                            <VStack
-                                                style={styles.ShadowBorder}
-                                                key={index}
-                                                position='relative'
-                                                alignItems='center'
-                                                justifyContent='space-evenly'
-                                                w='48%'
-                                                bg='#ffffff'
-                                                borderRadius={20}
-                                                gap={10}
-                                                padding={10}
-                                                paddingVertical={15}
-                                            >
-                                                <Image
-                                                    alt='imagem'
-                                                    height={160}
-                                                    aspectRatio={1}
-                                                    borderRadius={15}
-                                                    source={{
-                                                        uri: element.imgUrl
-                                                    }}
-                                                />
-
-
-                                                <Text textAlignVertical='center' color='#664e3c' textAlign='center' width={'90%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
-                                                <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2).replace('.', ',')}</Text>
+                        >
+                            <View
+                                style={styles.FlexContainerDelete}>
+                                {
+                                    ItensTabela.map((element, index) => {
+                                        console.log(element)
+                                        if (Exibindo == 2) {
+                                            return (
+                                                <VStack
+                                                    style={styles.ShadowBorder}
+                                                    key={index}
+                                                    position='relative'
+                                                    alignItems='center'
+                                                    justifyContent='space-evenly'
+                                                    w='48%'
+                                                    bg='#ffffff'
+                                                    borderRadius={20}
+                                                    gap={10}
+                                                    padding={10}
+                                                    paddingVertical={15}
+                                                >
+                                                    <Image
+                                                        alt='imagem'
+                                                        height={160}
+                                                        aspectRatio={1}
+                                                        borderRadius={15}
+                                                        source={{
+                                                            uri: element.imgUrl
+                                                        }}
+                                                    />
 
 
-                                                <Button style={styles.ShadowBorder} borderRadius={15} bgColor='#fff' size="md" height={50} w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
-                                                    <ButtonText
-                                                        onPress={() => { handleShow(); setDeleteAtual(element.imgName) }}
+                                                    <Text textAlignVertical='center' color='#664e3c' textAlign='center' width={'90%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
+                                                    <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2).replace('.', ',')}</Text>
 
-                                                        color='#664e3c'
-                                                        fontSize={20}
-                                                        fontWeight={900}
+
+                                                    <Button style={styles.ShadowBorder} borderRadius={15} bgColor='#fff' size="md" height={50} w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false}
+                                                        onPress={() => { handleShowDelete(); setDeleteAtual(element.imgName) }}
                                                     >
-                                                        DELETAR
-                                                    </ButtonText>
-                                                </Button>
+                                                        <ButtonText
 
-                                            </VStack>
+                                                            color='#664e3c'
+                                                            fontSize={20}
+                                                            fontWeight={900}
+                                                        >
+                                                            DELETAR
+                                                        </ButtonText>
+                                                    </Button>
+
+                                                </VStack>
+                                            )
+                                        }
+                                    }
+                                    )
+                                }
+                            </View>
+                        </ScrollView>
+                        :
+                        (Exibindo == 3 ?
+                            <ScrollView
+                                flex={1}
+
+                            >
+                                <View
+                                    style={styles.FlexContainerDelete}>
+                                    {
+                                        ItensTabela.map((element, index) => {
+                                            console.log(element)
+                                            if (Exibindo == 3) {
+                                                return (
+                                                    <VStack
+                                                        style={styles.ShadowBorder}
+                                                        key={index}
+                                                        position='relative'
+                                                        alignItems='center'
+                                                        justifyContent='space-evenly'
+                                                        w='48%'
+                                                        bg='#ffffff'
+                                                        borderRadius={20}
+                                                        gap={10}
+                                                        padding={10}
+                                                        paddingVertical={15}
+                                                    >
+                                                        <Image
+                                                            alt='imagem'
+                                                            height={160}
+                                                            aspectRatio={1}
+                                                            borderRadius={15}
+                                                            source={{
+                                                                uri: element.imgUrl
+                                                            }}
+                                                        />
+
+
+                                                        <Text textAlignVertical='center' color='#664e3c' textAlign='center' width={'90%'} style={[styles.TextoM]} fontWeight={900}>{element.nome}</Text>
+                                                        <Text textAlignVertical='center' color='#f89a56' style={[styles.TextoM]} fontWeight={900}>R$ {JSON.parse(element.valor).toFixed(2).replace('.', ',')}</Text>
+
+
+                                                        <Button style={styles.ShadowBorder} borderRadius={15} bgColor='#fff' size="md" height={50} w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false}
+                                                            onPress={() => { handleShowEdit(); setEditAtual(element) }}
+                                                        >
+                                                            <ButtonText
+
+                                                                color='#664e3c'
+                                                                fontSize={20}
+                                                                fontWeight={900}
+                                                            >
+                                                                EDITAR
+                                                            </ButtonText>
+                                                        </Button>
+
+                                                    </VStack>
+                                                )
+                                            }
+                                        }
                                         )
                                     }
-                                }
-                                )
-                            }
-                        </View>
-                    </ScrollView>
+                                </View>
+                            </ScrollView>
+                            : 'valor desconhecido'))
+
+
                 }
             </View >
             <Center display={ShowDelete} style={styles.background} blurRadius={10} >
                 <VStack padding={10} width={"80%"} height={'40%'} backgroundColor='#fff' borderRadius={30} alignItems='center' justifyContent='space-evenly' >
                     <TouchableOpacity
-                        onPress={() => { handlePress; handleHide() }}
+                        onPress={() => { handlePress; handleHideRemove() }}
                         onPressOut={() => { handleRelease }}
                         activeOpacity={0.5} // Define a opacidade quando o botão é pressionado
                         style={[styles.button, isPressed && styles.buttonPressed]}
@@ -441,6 +549,48 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina }
                         style={[styles.button, isPressed && styles.buttonPressed]}
                     >
                         <Text width={'100%'} height={'100%'} color='#fff' textTransform='uppercase' fontWeight={900} fontSize={40} backgroundColor='green' textAlign='center' textAlignVertical='center' borderRadius={30} style={styles.ButtonshadowwConfirm} shadowColor='green'>Confirmar</Text>
+                    </TouchableOpacity>
+
+                </VStack>
+            </Center>
+
+            <Center display={ShowEdit} style={styles.background} blurRadius={10} >
+                <VStack padding={10} width={"80%"} height={400} backgroundColor='#fff' borderRadius={30} alignItems='center' justifyContent='space-around' >
+                    <Input position='relative' style={[styles.InputStyles, FocusValue && styles.inputFieldFocus]} variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} >
+
+
+                        <InputField
+                            fontSize={20}
+                            marginVertical={15}
+                            placeholder={EditAtual.nome}
+                            onChangeText={EditarInputNome}
+                        // value={EditAtual.nome}
+                        />
+
+                    </Input>
+                    <Input position='relative' style={[styles.InputStyles, FocusValue && styles.inputFieldFocus]} variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} >
+
+
+                        <InputField
+                            fontSize={20}
+                            marginVertical={15}
+                            placeholder={EditAtual.valor}
+                            keyboardType='numeric'
+                            type='number'
+                            // onChange={}
+                            onChangeText={EditarInputValor}
+                        // value={EditAtual.valor}
+                        />
+
+                    </Input>
+
+                    <TouchableOpacity
+                        onPress={() => { handlePress; updateLinha("cardsInfo", EditAtual, EditAtual.id) }}
+                        onPressOut={handleRelease}
+                        activeOpacity={0.5} // Define a opacidade quando o botão é pressionado
+                        style={[styles.buttonEdit, isPressed && styles.buttonPressed]}
+                    >
+                        <Text width={'100%'} height={100} color='#fff' textTransform='uppercase' fontWeight={900} fontSize={40} backgroundColor='green' textAlign='center' textAlignVertical='center' borderRadius={30} style={styles.ButtonshadowwConfirm} shadowColor='green'>Editar</Text>
                     </TouchableOpacity>
 
                 </VStack>
@@ -611,6 +761,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: '100%',
         height: '45%',
+        shadowColor: 'transparent',
+        elevation: 0
+
+    },
+    buttonEdit: {
+        backgroundColor: 'transparent',
+        padding: 15,
+        borderRadius: 10,
+        width: '100%',
         shadowColor: 'transparent',
         elevation: 0
 

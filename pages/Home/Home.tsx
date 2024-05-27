@@ -148,23 +148,24 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
     function ButtonChange(event, element, index) {
         return (
             event == 0 ? (
-                <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#fff' size="md" height={50} w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+                <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#fff' size="md" height={50} w={'100%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false}
+                    onPress={() => {
+                        setItensEscolhidos(prevItens => {
+                            const itemIndex = prevItens.findIndex(item => item.nome === element.nome);
+                            if (itemIndex !== -1) {
+                                // Item já existe, atualiza a quantidade
+                                handelAdd(element, index)
+                                prevItens[itemIndex].quantidade++;
+                            } else {
+                                // Item não existe, adiciona ao array com quantidade inicial 1
+                                element.quantidade = 1
+                                prevItens.push({ ...element, quantidade: 1 });
+                            }
+                            return [...prevItens]; // Retorna uma nova cópia do array atualizado
+                        });
+                    }} >
                     <ButtonText
-                        onPress={() => {
-                            setItensEscolhidos(prevItens => {
-                                const itemIndex = prevItens.findIndex(item => item.nome === element.nome);
-                                if (itemIndex !== -1) {
-                                    // Item já existe, atualiza a quantidade
-                                    handelAdd(element, index)
-                                    prevItens[itemIndex].quantidade++;
-                                } else {
-                                    // Item não existe, adiciona ao array com quantidade inicial 1
-                                    element.quantidade = 1
-                                    prevItens.push({ ...element, quantidade: 1 });
-                                }
-                                return [...prevItens]; // Retorna uma nova cópia do array atualizado
-                            });
-                        }}
+
 
                         color='#664e3c'
                         style={[styles.TextoM]}
@@ -176,55 +177,79 @@ export default function Home({ atualizaPagina, setatualizaPagina, ItensEscolhido
 
             ) :
                 <HStack alignItems='center' justifyContent='space-around' width={'100%'}>
-                    <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='#44bc85' size="md" height={50} w={'45%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+                    <Button
+                        style={styles.Buttonshadoww}
+                        borderRadius={15}
+                        bgColor='#44bc85'
+                        size="md"
+                        height={50}
+                        w={'45%'}
+                        variant="solid"
+                        action="primary"
+                        isDisabled={false}
+                        isFocusVisible={false}
+                        onPress={() => {
+                            setItensEscolhidos(prevItens => {
+                                const itemIndex = prevItens.findIndex(item => item.nome === element.nome);
+                                if (itemIndex !== -1) {
+                                    // Item já existe, atualiza a quantidade
+                                    handelAdd(element, index)
+                                    prevItens[itemIndex].quantidade++;
+                                } else {
+                                    // Item não existe, adiciona ao array com quantidade inicial 1
+                                    handelAdd(element, index)
+                                    prevItens.push({ ...element, quantidade: 1 });
+                                }
+                                return [...prevItens]; // Retorna uma nova cópia do array atualizado
+                            });
+                        }} >
                         <ButtonText
                             color='#fff'
                             style={[styles.TextoG]}
                             fontWeight={900}
-                            onPress={() => {
-                                setItensEscolhidos(prevItens => {
-                                    const itemIndex = prevItens.findIndex(item => item.nome === element.nome);
-                                    if (itemIndex !== -1) {
-                                        // Item já existe, atualiza a quantidade
-                                        handelAdd(element, index)
-                                        prevItens[itemIndex].quantidade++;
-                                    } else {
-                                        // Item não existe, adiciona ao array com quantidade inicial 1
-                                        handelAdd(element, index)
-                                        prevItens.push({ ...element, quantidade: 1 });
-                                    }
-                                    return [...prevItens]; // Retorna uma nova cópia do array atualizado
-                                });
-                            }}
+
 
                         >
                             +
                         </ButtonText>
                     </Button>
 
-                    <Button style={styles.Buttonshadoww} borderRadius={15} bgColor='red' height={50} size="md" w={'40%'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} >
+                    <Button
+                        style={styles.Buttonshadoww}
+                        borderRadius={15}
+                        bgColor='red'
+                        height={50}
+                        size="md"
+                        w={'40%'}
+                        variant="solid"
+                        action="primary"
+                        isDisabled={false}
+                        isFocusVisible={false}
+                        onPress={() => {
+                            setItensEscolhidos(prevItens => {
+                                const itemIndex = prevItens.findIndex(item => item.nome === element.nome);
+                                if (itemIndex !== -1) {
+                                    // Item já existe, atualiza a quantidade
+                                    handelRemove(element, index)
+                                    prevItens[itemIndex].quantidade--;
+                                } else {
+                                    // Item não existe, adiciona ao array com quantidade inicial 1
+                                    element.quantidade = 1
+                                    prevItens.push({ ...element, quantidade: 1 });
+                                }
+                                return [...prevItens]; // Retorna uma nova cópia do array atualizado
+                            });
+                        }}
+                    >
+
                         <ButtonText
                             color='#fff'
                             style={[styles.TextoG]}
                             fontWeight={900}
-                            onPress={() => {
-                                setItensEscolhidos(prevItens => {
-                                    const itemIndex = prevItens.findIndex(item => item.nome === element.nome);
-                                    if (itemIndex !== -1) {
-                                        // Item já existe, atualiza a quantidade
-                                        handelRemove(element, index)
-                                        prevItens[itemIndex].quantidade--;
-                                    } else {
-                                        // Item não existe, adiciona ao array com quantidade inicial 1
-                                        element.quantidade = 1
-                                        prevItens.push({ ...element, quantidade: 1 });
-                                    }
-                                    return [...prevItens]; // Retorna uma nova cópia do array atualizado
-                                });
-                            }}
                         >
                             -
                         </ButtonText>
+
                     </Button>
                 </HStack>
 

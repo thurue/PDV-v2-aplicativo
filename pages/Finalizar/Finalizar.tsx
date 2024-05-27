@@ -15,6 +15,7 @@ import {
 import { Input, InputField } from '@gluestack-ui/themed';
 
 import { Dimensions } from 'react-native';
+import { parse } from 'react-native-svg';
 const { width, height } = Dimensions.get('window');
 
 
@@ -40,6 +41,9 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
     useEffect(() => {
         CalcTroco();
     }, [ValorRecebido])
+    useEffect(() => {
+        CalcTroco();
+    }, [])
 
     const CalcValorTotal = () => {
 
@@ -89,6 +93,17 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
         setLimparSelecao(true)
         navigation.navigate('Home')
     }
+
+    const getFormattedValue = (value) => {
+        if (typeof value === 'string') {
+            return parseFloat(value.replace(',', '.'));
+        }
+        return value;
+    };
+
+    const formattedValue = getFormattedValue(ValorTroco);
+
+
     return (
         <View style={styles.View}>
             <ScrollView>
@@ -135,9 +150,9 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                             {ItensEscolhidos.map((element, index) => (
                                 <React.Fragment key={index}>
                                     <HStack width={'100%'} backgroundColor='#fff' paddingVertical={15} justifyContent='space-between'>
-                                        <HStack >
+                                        <HStack maxWidth={'75%'} >
                                             <Text style={styles.textoMedio} color='#664e3c'> {element.nome}</Text>
-                                            <Text style={styles.textoMedio} color='#f89a56'> X{element.quantidade}</Text>
+                                            <Text textAlignVertical='center' style={styles.textoMedio} color='#f89a56'> ({element.quantidade})</Text>
                                         </HStack>
                                         <Text style={styles.textoMedio} color='#664e3c'>R${(element.valor * element.quantidade).toFixed(2).replace('.', ',')}</Text>
                                     </HStack>
@@ -172,21 +187,42 @@ export default function ImagePickerExample({ atualizaPagina, setatualizaPagina, 
                                     </Input>
                                 </VStack>
                                 <VStack width={'45%'} >
-                                    <Text fontWeight={900} style={styles.TextoM} justifyContent='flex-end'>TROCO</Text>
-                                    <Text textAlignVertical='center' style={[styles.Titulo, styles.TextoM, styles.ShadowBorder]} backgroundColor='#56f866' paddingVertical={15} paddingHorizontal={10} justifyContent='flex-end'>R$ {ValorTroco}</Text>
+                                    {/* <Text fontWeight={900} style={styles.TextoM} justifyContent='flex-end'> */}
+                                    {formattedValue > 0 ?
+
+                                        <React.Fragment>
+                                            <Text fontWeight={900} style={styles.TextoM} justifyContent='flex-end'>
+                                                TROCO
+                                            </Text>
+                                            <Text textAlignVertical='center' style={[styles.Titulo, styles.TextoM, styles.ShadowBorder]} backgroundColor='#56f866' paddingVertical={15} paddingHorizontal={10} justifyContent='flex-end'>
+                                                R$ {ValorTroco}
+                                            </Text>
+                                        </React.Fragment>
+                                        :
+                                        <React.Fragment>
+                                            <Text fontWeight={900} style={styles.TextoM} justifyContent='flex-end'>
+                                                A RECEBER
+                                            </Text>
+                                            <Text textAlignVertical='center' style={[styles.Titulo, styles.TextoM, styles.ShadowBorder]} backgroundColor='#f85656' paddingVertical={15} paddingHorizontal={10} justifyContent='flex-end'>
+                                                R$ {ValorTroco}
+                                            </Text>
+                                        </React.Fragment>
+                                    }
+
                                 </VStack>
                             </HStack>
                         </VStack>
                     </VStack>
 
-                    <Button style={styles.ShadowBorder} borderRadius={15} bgColor='#fff' size="md" height={60} w={'90%'} marginHorizontal={'auto'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} marginVertical={30}>
+                    <Button style={styles.ShadowBorder} borderRadius={15} bgColor='#fff' size="md" height={60} w={'90%'} marginHorizontal={'auto'} variant="solid" action="primary" isDisabled={false} isFocusVisible={false} marginVertical={30}
+                        onPress={() => { ClearSelection() }}
+                    >
                         <ButtonText
 
                             color='#664e3c'
                             // fontSize={25}
                             style={styles.TextoG}
                             fontWeight={900}
-                            onPress={() => { ClearSelection() }}
 
                         >
                             Voltar ao inicio
